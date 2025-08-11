@@ -1,18 +1,15 @@
-import SectionFour from "../components/Homepage/SectionFour";
-import SectionThree from "../components/Homepage/SectionThree";
-import SectionTwo from "../components/Homepage/SectionTwo";
-import SectionOne from "../components/Homepage/sectionOne";
-import Navbar from "./../components/Navbar";
+import { useLocation } from "react-router-dom";
+import Navbar from "../components/Homepage/Navbar";
+import Home from "../components/Homepage/Home";
 
-const Homepage = () => {
+const Homepage: React.FC = () => {
+  const location = useLocation();
+  const currLocation = location.pathname;
   return (
     <>
       <div className="svg-background">
         <Navbar></Navbar>
-        <SectionOne></SectionOne>
-        <SectionTwo></SectionTwo>
-        <SectionThree></SectionThree>
-        <SectionFour></SectionFour>
+        {currLocation == "/" ? <Home></Home> : <></>}
       </div>
     </>
   );

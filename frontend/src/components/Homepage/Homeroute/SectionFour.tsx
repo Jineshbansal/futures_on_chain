@@ -1,5 +1,5 @@
 import React from "react";
-import image from "./../../assets/Group 48097465.svg";
+import image from "./../../../assets/Group 48097465.svg";
 
 const SectionFour: React.FC = () => {
   return (
