@@ -1,19 +1,19 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { FillOrder } from "../utils/FillOrder.js";
+import { Transfer } from "../utils/Transfer.js";
 
 const bids = {};
 const asks = {};
 
-const order = asyncHandler(async (req, res) => {
+const recentTrades = {};
+
+const marketorder = asyncHandler(async (req, res) => {
   const side = req.body.side; //ask or bid
   const price = req.body.price;
   const quantity = req.body.quantity;
-  const userId = req.body.userId;
-  const pair = req.params.Pair;
-
-  const remainingQty = FillOrder(side, price, quantity, userId);
+  const walletId = req.body.walletId;
+  const pair = req.params.pair;
 
   if (!bids[pair]) {
     bids[pair] = [];
@@ -22,6 +22,14 @@ const order = asyncHandler(async (req, res) => {
   if (!asks[pair]) {
     asks[pair] = [];
   }
+
+  const remainingQty = FillOrderForMarketOrder(
+    side,
+    pair,
+    price,
+    quantity,
+    walletId
+  );
 
   if (remainingQty === 0) {
     res.json({
@@ -32,14 +40,65 @@ const order = asyncHandler(async (req, res) => {
 
   if (side === "bid") {
     bids[pair].push({
-      userId,
+      walletId,
       price,
       quantity,
     });
-    bids[pair].sort((a, b) => a.price - b.price);
+    bids[pair].sort((a, b) => b.price - a.price);
   } else {
     asks[pair].push({
-      userId,
+      walletId,
+      price,
+      quantity,
+    });
+    asks[pair].sort((a, b) => a.price - b.price);
+  }
+
+  res.json({
+    filledQuantity: quantity - remainingQty,
+  });
+});
+
+const limitorder = asyncHandler(async (req, res) => {
+  const side = req.body.side; //ask or bid
+  const price = req.body.price;
+  const quantity = req.body.quantity;
+  const walletId = req.body.walletId;
+  const pair = req.params.pair;
+
+  if (!bids[pair]) {
+    bids[pair] = [];
+  }
+
+  if (!asks[pair]) {
+    asks[pair] = [];
+  }
+
+  const remainingQty = FillOrderForLimitOrder(
+    side,
+    pair,
+    price,
+    quantity,
+    walletId
+  );
+
+  if (remainingQty === 0) {
+    res.json({
+      filledQuantity: quantity,
+    });
+    return;
+  }
+
+  if (side === "bid") {
+    bids[pair].push({
+      walletId,
+      price,
+      quantity,
+    });
+    bids[pair].sort((a, b) => b.price - a.price);
+  } else {
+    asks[pair].push({
+      walletId,
       price,
       quantity,
     });
@@ -52,7 +111,7 @@ const order = asyncHandler(async (req, res) => {
 });
 
 const depth = asyncHandler(async (req, res) => {
-  const pair = req.params.Pair;
+  const pair = req.params.pair;
   const depth = {};
 
   if (!bids[pair]) {
@@ -90,4 +149,86 @@ const depth = asyncHandler(async (req, res) => {
   });
 });
 
-export { order, depth };
+const recent = asyncHandler(async (req, res) => {
+  const pair = req.params.pair;
+
+  if (!recentTrades[pair]) {
+    recentTrades[pair] = [];
+  }
+
+  res.json({
+    recentTrades,
+  });
+});
+
+function FillOrderForMarketOrder(side, pair, price, quantity, walletId) {
+  let remainingQty = quantity;
+
+  if (side === "bid") {
+    for (let i = 0; i < asks[pair].length; i++) {
+      if (asks[pair][i].quantity > remainingQty) {
+        Transfer(); //Web3 part
+        asks[pair][i].quantity -= remainingQty;
+        remainingQty = 0;
+      } else {
+        Transfer(); //Web3 Part
+        remainingQty -= asks[pair][i].quantity;
+        asks[pair].shift();
+      }
+    }
+  } else {
+    for (let i = 0; i < bids[pair].length; i++) {
+      if (bids[pair][i].quantity > remainingQty) {
+        Transfer(); //Web3 Part
+        bids[pair][i].quantity -= remainingQty;
+        remainingQty = 0;
+      } else {
+        Transfer(); //Web3 Part
+        remainingQty -= bids[pair][i].quantity;
+        bids[pair].shift();
+      }
+    }
+  }
+
+  return remainingQty;
+}
+
+function FillOrderForLimitOrder(side, pair, price, quantity, walletId) {
+  let remainingQty = quantity;
+
+  if (side === "bid") {
+    for (let i = 0; i < asks[pair].length; i++) {
+      if (asks[pair][i].price > price) {
+        continue;
+      }
+      if (asks[pair][i].quantity > remainingQty) {
+        Transfer(); //Web3 part
+        asks[pair][i].quantity -= remainingQty;
+        remainingQty = 0;
+      } else {
+        Transfer(); //Web3 Part
+        remainingQty -= asks[pair][i].quantity;
+        asks[pair].shift();
+      }
+    }
+  } else {
+    for (let i = 0; i < bids[pair].length; i++) {
+      if (bids[pair][i].price < price) {
+        continue;
+      }
+      if (bids[pair][i].quantity > remainingQty) {
+        Transfer(); //Web3 Part
+        bids[pair][i].quantity -= remainingQty;
+        remainingQty = 0;
+      } else {
+        Transfer(); //Web3 Part
+        remainingQty -= bids[pair][i].quantity;
+        bids[pair].shift();
+      }
+    }
+  }
+
+  return remainingQty;
+}
+
+export { marketorder, limitorder, depth, recent };

@@ -1,9 +1,16 @@
 import { Router } from "express";
-import { depth, order } from "../controllers/orderbook.controller.js";
+import {
+  marketorder,
+  limitorder,
+  depth,
+  recent,
+} from "../controllers/orderbook.controller.js";
 
 const router = Router();
 
-router.route("/:Pair/order").post(order);
-router.route("/:Pair/depth").get(depth);
+router.route("/:pair/marketorder").post(marketorder);
+router.route("/:pair/limitorder").post(limitorder);
+router.route("/:pair/depth").get(depth);
+router.route("/:pair/recent").get(recent);
 
 export default router;
