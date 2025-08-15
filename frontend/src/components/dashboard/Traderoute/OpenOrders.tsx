@@ -1,11 +1,11 @@
 import React from "react";
 
-const Positions = () => {
+const OpenOrders = () => {
   return (
     <div className="flex justify-center items-center h-full w-full border-[0.5px] border-[#383C3F]">
-      Positions
+      OpenOrders
     </div>
   );
 };
 
-export default Positions;
+export default OpenOrders;

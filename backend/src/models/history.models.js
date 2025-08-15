@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const historySchema = new mongoose.Schema(
   {
-    walletId: {
+    _walletId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Wallet",
     },
