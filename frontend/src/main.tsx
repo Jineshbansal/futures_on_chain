@@ -36,7 +36,7 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AptosWalletAdapterProvider
       plugins={wallets}
       autoConnect={true}
@@ -46,5 +46,5 @@ root.render(
     >
       <App />
     </AptosWalletAdapterProvider>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

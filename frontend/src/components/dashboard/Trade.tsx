@@ -26,13 +26,22 @@ const Trade = () => {
             !fullScreen ? "row-start-1 row-end-4" : "row-start-1 row-end-7"
           } h-full w-full`}
         >
+          {!fullScreen &&
           <div
-            className={`flex justify-center items-center ${
-              !fullScreen ? "h-[88%]" : "h-[94%]"
-            } w-full`}
+            className={`flex justify-center items-center h-[88%]
+            w-full`}
           >
-            <Graph></Graph>
+            <Graph ></Graph>
+          </div>}
+          {fullScreen && 
+          <div
+            className={`flex justify-center items-center h-[94%]
+             w-full`}
+          >
+            <Graph ></Graph>
           </div>
+        }
+          
           <div
             className={`flex justify-between items-center ${
               !fullScreen ? "h-[12%]" : "h-[6%] border-b-[0.5px]"
