@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 // wallet adapter
 import { AptosWalletAdapterProvider } from "@aptos-labs/wallet-adapter-react";

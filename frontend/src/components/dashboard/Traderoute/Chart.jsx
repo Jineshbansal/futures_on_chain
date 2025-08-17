@@ -1,20 +1,24 @@
 import React, {
   useEffect,
   useRef,
+  useState
 } from 'react';
 import { createChart } from "lightweight-charts";
 
 
-const url = 'https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event';
-const options = { method: 'GET', headers: { Accept: 'application/json' } };
-
-
 export default function TradingViewWidget() {
 
-  console.log("mae aa gya hu");
+const rfFactor = 0.05;
+const expiryTime = 1701801000;
+const factor = 86400 * 365;
+
+let limit = 100;
+let lastSequenceNumber= "0";
+let url =`https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`;
+const options = { method: 'GET', headers: { Accept: 'application/json' } };
 
   const chartRef = useRef()
-  let actualData = [];
+
 
   useEffect(() => {
     const chartProperties = {
@@ -36,24 +40,48 @@ export default function TradingViewWidget() {
     const domElement = chartRef.current;
     const chart = createChart(domElement, chartProperties);
     const lineSeries = chart.addLineSeries({ color: '#2962FF' });
+
+    /// initial data fetch last 100 entries and set to chart
     fetch(url, options)
+    .then(res => res.json())
+    .then(data => {
+      console.log(data);
+      lastSequenceNumber = (parseInt(data[data.length-1].sequence_number) + 1).toString();
+      console.log(lastSequenceNumber);
+      const tempData = [];
+      const actualData = [];
+      data.map(d => {
+        tempData.push(d.data)
+      })
+      tempData.map(d => {
+        const currData = { value: parseFloat(d.ltp)*(1 + (rfFactor*(expiryTime - Math.floor(Number(d.timestamp) / 1000000)))/(factor)), time: Math.floor(Number(d.timestamp) / 1000000) };
+        actualData.push(currData);
+      });
+      console.log(actualData);
+      lineSeries.setData(actualData);
+    })
+    .catch(err => console.log(err))
+
+
+
+    limit = 10;
+    setInterval(() => {
+      url =`https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`
+      fetch(url, options)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
-        const tempData = [];
-        data.map(d => {
-          tempData.push(d.data)
-        })
-        tempData.map(d => {
-          const currData = { value: parseFloat(d.ltp), time: Math.floor(Number(d.timestamp) / 1000000) };
-          actualData.push(currData);
-        });
-        console.log(actualData)
-        lineSeries.setData(actualData);
+        lastSequenceNumber = (parseInt(data[data.length-1].sequence_number) + 1).toString();
+        console.log(data[data.length-1])
+        const currData = {
+          value : parseFloat(data[data.length-1].data.ltp)*(1 + (rfFactor*(expiryTime - Math.floor(Number(data[data.length-1].data.timestamp)/1000000))/(factor))), 
+          time : Math.floor(Number(data[0].data.timestamp)/1000000)
+        }
+        console.log(currData);
+        lineSeries.update(currData);
       })
-      .catch(err => log(err))
+      .catch(err => console.log(err))
+    }, 1000);
   }, []);
-
 
   return (
     <div ref={chartRef} className='h-full w-full'></div>
@@ -64,7 +92,6 @@ export default function TradingViewWidget() {
 
 // const TESTNET_HERMES_ENDPOINT = "https://hermes-beta.pyth.network";
 
-
 // const testnetConnection = new AptosPriceServiceConnection(
 //   TESTNET_HERMES_ENDPOINT
 // );
@@ -72,9 +99,6 @@ export default function TradingViewWidget() {
 //   "0xf9c0172ba10dfa4d19088d94f5bf61d3b54d5bd7483a322a982e1373ee8ea31b";
 
 // const timeGapSec = 10;
-// const rfFactor = 0.05;
-// const expiryTime = 1701628200;
-// const factor = 86400 * 365;
 // let prevEntry = 0;
 // let currEntry = 0;
 // testnetConnection.subscribePriceFeedUpdates(

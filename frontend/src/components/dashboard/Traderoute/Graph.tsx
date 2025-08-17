@@ -1,5 +1,4 @@
-import React from "react";
-import TradingViewWidget from "./Chart.jsx";
+import TradingViewWidget from "./Chart.jsx" ;
 
 const Graph = () => {
   return (

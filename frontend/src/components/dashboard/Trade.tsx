@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Graph from "./Traderoute/Graph";
 import CoinInformation from "./Traderoute/CoinInformation";
-import Positions from "./Traderoute/Positions";
 import OrderBook from "./Traderoute/OrderBook";
 import RecentTrades from "./Traderoute/RecentTrades";
 import OrderWindow from "./Traderoute/OrderWindow";
