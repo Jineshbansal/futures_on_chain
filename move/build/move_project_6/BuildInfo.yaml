@@ -1,0 +1,50 @@
+---
+compiled_package_info:
+  package_name: move_project_6
+  address_alias_instantiation:
+    Extensions: "0000000000000000000000000000000000000000000000000000000000000001"
+    Team18: "0000000000000000000000000000000000000000000000000000000000000123"
+    aptos_framework: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_std: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_token: "0000000000000000000000000000000000000000000000000000000000000003"
+    core_resources: 000000000000000000000000000000000000000000000000000000000a550c18
+    dummycastdefi_addr: f3291287299f2555c7606eb6ce33f6f2edd46e254a49b10fedbd3cd98854aa79
+    source_addr: 79501b4fc7f7043312dae6c66c1584c5b6ddce8d09d5cb0fd2b5d97bb4079cf3
+    std: "0000000000000000000000000000000000000000000000000000000000000001"
+    vm_reserved: "0000000000000000000000000000000000000000000000000000000000000000"
+  source_digest: E1362C4A36C5F2D2CE25EF4C9787C3470EF0CEAF14EE76698A386E12E1C0C837
+  build_flags:
+    dev_mode: false
+    test_mode: false
+    generate_docs: false
+    generate_abis: false
+    generate_move_model: true
+    full_model_generation: false
+    install_dir: ~
+    force_recompilation: false
+    additional_named_addresses:
+      source_addr: 79501b4fc7f7043312dae6c66c1584c5b6ddce8d09d5cb0fd2b5d97bb4079cf3
+    architecture: ~
+    fetch_deps_only: false
+    skip_fetch_latest_git_deps: false
+    compiler_config:
+      bytecode_version: ~
+      known_attributes:
+        - bytecode_instruction
+        - deprecated
+        - event
+        - expected_failure
+        - legacy_entry_fun
+        - native_interface
+        - resource_group
+        - resource_group_member
+        - test
+        - test_only
+        - verify_only
+        - view
+      skip_attribute_checks: false
+      compiler_version: ~
+dependencies:
+  - AptosFramework
+  - AptosStdlib
+  - MoveStdlib

@@ -1,9 +1,11 @@
 [package]
-name = 'my_app'
-version = '1.0.0'
-[dependencies.AptosFramework]
-git = 'https://github.com/aptos-labs/aptos-core.git'
-rev = 'main'
-subdir = 'aptos-move/framework/aptos-framework'
+name = "move_project_6"
+version = "0.0.0"
+
+[dependencies]
+AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework", rev = "mainnet" }
+
 [addresses]
-module_addr='_'
+dummycastdefi_addr = "0xf3291287299f2555c7606eb6ce33f6f2edd46e254a49b10fedbd3cd98854aa79"
+std = "0x1"
+Team18="0x123"
