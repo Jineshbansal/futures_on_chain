@@ -1,94 +1,130 @@
-import React, {
-  useEffect,
-  useRef,
-  useState
-} from 'react';
-import { createChart } from "lightweight-charts";
-
+import React, { useEffect, useRef, useState } from "react";
+import { createChart, PriceScaleMode } from "lightweight-charts";
 
 export default function TradingViewWidget() {
+  const rfFactor = 0.1;
+  const expiryTime = 1701801000;
+  const factor = 3600 * 24;
 
-const rfFactor = 0.05;
-const expiryTime = 1701801000;
-const factor = 86400 * 365;
+  let limit = 100;
+  let lastSequenceNumber = "0";
+  let url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}`;
+  const options = { method: "GET", headers: { Accept: "application/json" } };
 
-let limit = 100;
-let lastSequenceNumber= "0";
-let url =`https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`;
-const options = { method: 'GET', headers: { Accept: 'application/json' } };
-
-  const chartRef = useRef()
-
+  const chartRef = useRef();
 
   useEffect(() => {
     const chartProperties = {
-      layout: {
-        background: {
-          color: "#061323"
+      localization: {
+        priceFormatter: (price) => {
+          let myPrice = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "APT",
+            maximumFractionDigits: 3,
+          }).format(price);
+
+          return myPrice;
         },
-        textColor: "#DDD"
+      },
+      priceFormat: {
+        type: "price",
+        // precision: 70,
+        minMove: 0.001,
+      },
+      PriceScaleMode: {
+        autoScale: true,
+        mode: PriceScaleMode.Normal,
+        precision: 3,
+      },
+      layout: {
+        background: "#131722",
+        textColor: "#d1d4dd",
       },
       grid: {
-        vertLines: { color: "#444 " },
-        horzLines: { color: "#444" }
+        vertLines: {
+          color: "rgba(42, 46, 57, 0)",
+        },
+        horzLines: {
+          color: "rgba(42, 46, 57, 0.6)",
+        },
       },
       timeScale: {
         timeVisible: true,
         secondsVisible: true,
-      }
-    }
+      },
+    };
     const domElement = chartRef.current;
     const chart = createChart(domElement, chartProperties);
-    const lineSeries = chart.addLineSeries({ color: '#2962FF' });
+    // const lineSeries = chart.addLineSeries({ color: '#2962FF' });
+    var areaSeries = chart.addAreaSeries({
+      topColor: "rgba(38,198,218, 0.56)",
+      bottomColor: "rgba(38,198,218, 0.04)",
+      lineColor: "rgba(38,198,218, 1)",
+      lineWidth: 2,
+    });
 
     /// initial data fetch last 100 entries and set to chart
     fetch(url, options)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      lastSequenceNumber = (parseInt(data[data.length-1].sequence_number) + 1).toString();
-      console.log(lastSequenceNumber);
-      const tempData = [];
-      const actualData = [];
-      data.map(d => {
-        tempData.push(d.data)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        lastSequenceNumber = (
+          parseInt(data[data.length - 1].sequence_number) + 1
+        ).toString();
+        console.log(lastSequenceNumber);
+        const tempData = [];
+        const actualData = [];
+        data.map((d) => {
+          tempData.push(d.data);
+        });
+        tempData.map((d) => {
+          const currData = {
+            value:
+              parseFloat(d.ltp) *
+              (1 +
+                (rfFactor *
+                  (expiryTime - Math.floor(Number(d.timestamp) / 1000000))) /
+                  factor),
+            time: Math.floor(Number(d.timestamp) / 1000000),
+          };
+          actualData.push(currData);
+        });
+        console.log(actualData);
+        areaSeries.setData(actualData);
       })
-      tempData.map(d => {
-        const currData = { value: parseFloat(d.ltp)*(1 + (rfFactor*(expiryTime - Math.floor(Number(d.timestamp) / 1000000)))/(factor)), time: Math.floor(Number(d.timestamp) / 1000000) };
-        actualData.push(currData);
-      });
-      console.log(actualData);
-      lineSeries.setData(actualData);
-    })
-    .catch(err => console.log(err))
-
-
+      .catch((err) => console.log(err));
 
     limit = 10;
     setInterval(() => {
-      url =`https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`
+      url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`;
       fetch(url, options)
-      .then(res => res.json())
-      .then(data => {
-        lastSequenceNumber = (parseInt(data[data.length-1].sequence_number) + 1).toString();
-        console.log(data[data.length-1])
-        const currData = {
-          value : parseFloat(data[data.length-1].data.ltp)*(1 + (rfFactor*(expiryTime - Math.floor(Number(data[data.length-1].data.timestamp)/1000000))/(factor))), 
-          time : Math.floor(Number(data[0].data.timestamp)/1000000)
-        }
-        console.log(currData);
-        lineSeries.update(currData);
-      })
-      .catch(err => console.log(err))
+        .then((res) => res.json())
+        .then((data) => {
+          lastSequenceNumber = (
+            parseInt(data[data.length - 1].sequence_number) + 1
+          ).toString();
+          console.log(data[data.length - 1]);
+          const currData = {
+            value:
+              parseFloat(data[data.length - 1].data.ltp) *
+              (1 +
+                (rfFactor *
+                  (expiryTime -
+                    Math.floor(
+                      Number(data[data.length - 1].data.timestamp) / 1000000
+                    ))) /
+                  factor),
+            time: Math.floor(Number(data[0].data.timestamp) / 1000000),
+          };
+          console.log(currData);
+          areaSeries.update(currData);
+        })
+        .catch((err) => console.log(err));
     }, 1000);
   }, []);
 
-  return (
-    <div ref={chartRef} className='h-full w-full'></div>
-  );
+  return <div ref={chartRef} className="h-full w-full"></div>;
 }
-
-
 
 // const TESTNET_HERMES_ENDPOINT = "https://hermes-beta.pyth.network";
 
@@ -174,7 +210,6 @@ const options = { method: 'GET', headers: { Accept: 'application/json' } };
 // } from 'react';
 // import { createChart, CrosshairMode } from "lightweight-charts";
 
-
 // const TESTNET_HERMES_ENDPOINT = "https://hermes-beta.pyth.network";
 
 // // Connection
@@ -231,75 +266,73 @@ const options = { method: 'GET', headers: { Accept: 'application/json' } };
 
 // export default Graph;
 
+// const chart = useRef(null);
+// useEffect(() => {
+//   // chart.current = createChart(chartContainerRef.current, {
+//   //   width: window.width,
+//   //   height: 300,
+//   //   crosshair: {
+//   //     mode: CrosshairMode.Normal,
+//   //   },
+//   //   timeScale: {
+//   //     timeVisible: true,
+//   //     secondsVisible: true,
+//   //   },
+//   // });
 
-  // const chart = useRef(null);
-  // useEffect(() => {
-  //   // chart.current = createChart(chartContainerRef.current, {
-  //   //   width: window.width,
-  //   //   height: 300,
-  //   //   crosshair: {
-  //   //     mode: CrosshairMode.Normal,
-  //   //   },
-  //   //   timeScale: {
-  //   //     timeVisible: true,
-  //   //     secondsVisible: true,
-  //   //   },
-  //   // });
+//   // candleSeries.current = chart.current.addCandlestickSeries();
 
-  //   // candleSeries.current = chart.current.addCandlestickSeries();
+//   // const data = [
+//   //   { time: 1642427876, open: 0, high: 0, low: 0, close: 0 },
+//   // ];
 
-  //   // const data = [
-  //   //   { time: 1642427876, open: 0, high: 0, low: 0, close: 0 },
-  //   // ];
+//   // candleSeries.current.setData(data);
+//   // let lastIndex = data.length - 1;
+//   // let currentIndex = lastIndex + 1;
+//   // let currentTime = 1642427876;
+//   // let ticksInCurrentBar = 0;
+//   // let currentBar = {
+//   //   open: null,
+//   //   high: null,
+//   //   low: null,
+//   //   close: null,
+//   //   time: currentTime,
+//   // };
 
-  //   // candleSeries.current.setData(data);
-  //   // let lastIndex = data.length - 1;
-  //   // let currentIndex = lastIndex + 1;
-  //   // let currentTime = 1642427876;
-  //   // let ticksInCurrentBar = 0;
-  //   // let currentBar = {
-  //   //   open: null,
-  //   //   high: null,
-  //   //   low: null,
-  //   //   close: null,
-  //   //   time: currentTime,
-  //   // };
+//   // function mergeTickToBar(price) {
+//   //   if (currentBar.open === null) {
+//   //     currentBar.open = price;
+//   //     currentBar.high = price;
+//   //     currentBar.low = price;
+//   //     currentBar.close = price;
+//   //   } else {
+//   //     currentBar.close = price;
+//   //     currentBar.high = Math.max(currentBar.high, price);
+//   //     currentBar.low = Math.min(currentBar.low, price);
+//   //   }
+//   //   candleSeries.current.update(currentBar);
+//   // }
 
-  //   // function mergeTickToBar(price) {
-  //   //   if (currentBar.open === null) {
-  //   //     currentBar.open = price;
-  //   //     currentBar.high = price;
-  //   //     currentBar.low = price;
-  //   //     currentBar.close = price;
-  //   //   } else {
-  //   //     currentBar.close = price;
-  //   //     currentBar.high = Math.max(currentBar.high, price);
-  //   //     currentBar.low = Math.min(currentBar.low, price);
-  //   //   }
-  //   //   candleSeries.current.update(currentBar);
-  //   // }
+//   function updateChart() {
+//     console.log(price);
+//     // console.log(parseFloat(price.getPriceAsNumberUnchecked().toFixed(8)));
+//     // mergeTickToBar(parseFloat(price.getPriceAsNumberUnchecked().toFixed(8)));
 
+//     // if (++ticksInCurrentBar === 60) {
+//     //   currentIndex++;
+//     //   currentTime = currentTime + 60;
+//     //   currentBar = {
+//     //     open: null,
+//     //     high: null,
+//     //     low: null,
+//     //     close: null,
+//     //     time: currentTime,
+//     //   };
+//     //   ticksInCurrentBar = 0;
+//     // }
+//   }
 
-  //   function updateChart() {
-  //     console.log(price);
-  //     // console.log(parseFloat(price.getPriceAsNumberUnchecked().toFixed(8)));
-  //     // mergeTickToBar(parseFloat(price.getPriceAsNumberUnchecked().toFixed(8)));
+//   setInterval(updateChart, 1000);
 
-  //     // if (++ticksInCurrentBar === 60) {
-  //     //   currentIndex++;
-  //     //   currentTime = currentTime + 60;
-  //     //   currentBar = {
-  //     //     open: null,
-  //     //     high: null,
-  //     //     low: null,
-  //     //     close: null,
-  //     //     time: currentTime,
-  //     //   };
-  //     //   ticksInCurrentBar = 0;
-  //     // }
-  //   }
-
-  //   setInterval(updateChart, 1000);
-
-  //   return () => chart.current.remove();
-  // }, []);
+//   return () => chart.current.remove();
+// }, []);
