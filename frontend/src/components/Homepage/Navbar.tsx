@@ -55,7 +55,7 @@ let Navbar: React.FC = () => {
       <div className="md:hidden flex items-center justify-between px-4 py-4">
         <div>
           <a href="/">
-            <img src={logo}></img>
+            <img src={logo} className="h-12"></img>
           </a>
         </div>
 
@@ -82,7 +82,7 @@ let Navbar: React.FC = () => {
           <div className="md:hidden flex items-center justify-between px-4 py-4">
             <div>
               <a href="/">
-                <img src={logo}></img>
+                <img src={logo} className="h-12"></img>
               </a>
             </div>
             {nav ? (

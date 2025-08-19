@@ -1,16 +1,17 @@
 import React from "react";
 
-const OpenOrders = () => {
+const Positions = () => {
   return (
     <>
       <div className="md:flex hidden justify-center items-center h-full w-full border-[0.5px] border-[#383C3F]">
-        OpenOrders
+        Positions
       </div>
+
       <div className="md:hidden flex justify-center items-center h-full w-full">
-        OpenOrders
+        Positions
       </div>
     </>
   );
 };
 
-export default OpenOrders;
+export default Positions;

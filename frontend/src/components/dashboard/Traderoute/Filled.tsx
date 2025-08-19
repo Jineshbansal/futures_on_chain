@@ -1,16 +1,17 @@
 import React from "react";
 
-const OpenOrders = () => {
+const Filled = () => {
   return (
     <>
       <div className="md:flex hidden justify-center items-center h-full w-full border-[0.5px] border-[#383C3F]">
-        OpenOrders
+        Filled
       </div>
+
       <div className="md:hidden flex justify-center items-center h-full w-full">
-        OpenOrders
+        Filled
       </div>
     </>
   );
 };
 
-export default OpenOrders;
+export default Filled;
