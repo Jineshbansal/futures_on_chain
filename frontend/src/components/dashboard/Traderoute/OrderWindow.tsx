@@ -13,9 +13,9 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   const [limit, setLimit] = useState(true);
   const [side, setSide] = useState("Buy");
 
-  const [limitPrice, setLimitPrice] = useState(0);
-  const [price, setPrice] = useState(0);
-  const [size, setSize] = useState(0);
+  const [limitPrice, setLimitPrice] = useState(0.0);
+  const [price, setPrice] = useState(0.0);
+  const [size, setSize] = useState(0.0);
 
   const [leverage, setLeverage] = useState(1);
 
@@ -31,6 +31,8 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
 
     if (isValid) {
       setLimitPrice(inputValue);
+      setSize(0.0);
+      setPrice(0.0);
     }
   };
 
@@ -42,10 +44,34 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
 
     if (isValid) {
       setSize(inputValue);
+      if (limit) {
+        setPrice(limitPrice * inputValue);
+      }
+    } else {
+      //Market ltd from reccent trades set price to ltd*size
     }
   };
 
-  const handlePrice = (e) => {};
+  const handlePrice = (e) => {
+    const inputValue = e.target.value;
+
+    // Allow only positive numbers
+    const isValid = /^\d*\.?\d*$/.test(inputValue);
+
+    if (isValid) {
+      setPrice(inputValue);
+      if (limit) {
+        let calcSize = (inputValue / limitPrice).toFixed(4);
+        if (inputValue == 0) {
+          setSize(0.0);
+        } else {
+          setSize(calcSize);
+        }
+      } else {
+        //Market ltd from recent trades set size to price/recenttrades
+      }
+    }
+  };
 
   const handleLimitOrder = () => {
     if (!limitPrice || !size || !price) {
@@ -133,6 +159,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     }`}
                     onClick={() => {
                       setSide("Buy");
+                      setLimitPrice(0);
+                      setPrice(0);
+                      setSize(0);
+                      setLeverage(1);
                     }}
                   >
                     Buy
@@ -145,6 +175,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     }`}
                     onClick={() => {
                       setSide("Sell");
+                      setLimitPrice(0);
+                      setPrice(0);
+                      setSize(0);
+                      setLeverage(1);
                     }}
                   >
                     Sell
@@ -191,6 +225,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                           placeholder="0.00"
                           type="text"
                           value={price ? price : ""}
+                          onChange={handlePrice}
                         ></input>
                       </div>
                     </div>
@@ -218,11 +253,20 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div
-                className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                onClick={handleLimitOrder}
-              >
-                Place Order
+              <div className="flex flex-col justify-center items-center gap-2 w-full">
+                {price / leverage ? (
+                  <div className="flex justify-center items-center w-[60%] bg-[#FFFFFF] bg-opacity-[4%] h-10 text-teal-300 rounded-md text-[15px]">
+                    Marigin :<p>{(price / leverage).toFixed(4)}</p>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div
+                  className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
+                  onClick={handleLimitOrder}
+                >
+                  Place Order
+                </div>
               </div>
             </form>
           ) : (
@@ -280,6 +324,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         placeholder="0.00"
                         type="text"
                         value={price ? price : ""}
+                        onChange={handlePrice}
                       ></input>
                     </div>
                   </div>
@@ -306,11 +351,20 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div
-                className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                onClick={handleMarketOrder}
-              >
-                Place Order
+              <div className="flex flex-col justify-center items-center gap-2 w-full">
+                {price / leverage ? (
+                  <div className="flex justify-center items-center w-[60%] bg-[#FFFFFF] bg-opacity-[4%] h-10 text-teal-300 rounded-md text-[15px]">
+                    Marigin :<p>{(price / leverage).toFixed(4)}</p>
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <div
+                  className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
+                  onClick={handleMarketOrder}
+                >
+                  Place Order
+                </div>
               </div>
             </form>
           )}
