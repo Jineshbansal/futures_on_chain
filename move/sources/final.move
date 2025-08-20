@@ -9,6 +9,7 @@ module Team18::Orderbook {
     use aptos_framework::aptos_coin::{AptosCoin};
     use aptos_framework::event;
     use aptos_framework::timestamp;
+    use std::debug;
     struct Resource has key {
         resource_signer_cap: account::SignerCapability,
         bids: vector<User>,
@@ -25,6 +26,7 @@ module Team18::Orderbook {
     }
 
     fun init_module(account : &signer) {
+        // let resource_signer_cap = resource_account::retrieve_resource_account_cap(account, @0xcd1eebe9cb95b6a646f9aa56a4552fbd48003aee698a328bd0725483a523ad7f);
         let resource_signer_cap = resource_account::retrieve_resource_account_cap(account, @source_addr);
         
         move_to(account, Resource {
@@ -33,18 +35,18 @@ module Team18::Orderbook {
             sellers:vector::empty<User>(),
             bids: vector::empty<User>(),
             asks: vector::empty<User>(),
-
         });
-
-       
+        coin::register<AptosCoin>(account);
     }
 
     public entry fun buyAtlimitorder(account:&signer,lvg:u64,qty:u64,stock_price:u64) acquires Resource
     {
+        
         let resource = borrow_global_mut<Resource>(@Team18);
         let aptos_coin = coin::withdraw<AptosCoin>(account, (qty*stock_price)/lvg);
         coin::deposit(@Team18, aptos_coin);
 
+            
         //Esharky bhaiya code
 
         let i = vector::length(&resource.asks);
@@ -57,6 +59,8 @@ module Team18::Orderbook {
             };
             vector::push_back(&mut resource.bids, usr);
             //Sorting had to be done.....
+            let len = vector::length(&resource.bids);
+            mergeSort(&mut resource.bids, 0, len-1);
             return
         };
         while (i > 0) { 
@@ -107,10 +111,10 @@ module Team18::Orderbook {
             };
             vector::push_back(&mut resource.bids, usr);
             //sort bid
+            let len = vector::length(&resource.bids);
+            mergeSort(&mut resource.bids, 0, len-1);
             // sortDescending(&mut resource.bids);
         };
-        
-
     }
 
     public entry fun sellAtlimitorder(account:&signer,lvg:u64,qty:u64,stock_price:u64) acquires Resource
@@ -131,6 +135,8 @@ module Team18::Orderbook {
             };
             vector::push_back(&mut resource.asks, usr);
             //Sorting had to be done.....
+            let len = vector::length(&resource.asks);
+            mergeSorta(&mut resource.asks, 0, len-1);
             return
         };
         while (i > 0) { 
@@ -183,6 +189,8 @@ module Team18::Orderbook {
             vector::push_back(&mut resource.asks, usr);
             //sort bid
             // sortDescending(&mut resource.asks);
+            let len = vector::length(&resource.bids);
+            mergeSorta(&mut resource.bids, 0, len-1);
         };
         
 
@@ -238,7 +246,7 @@ module Team18::Orderbook {
         };
         if(qty>0)
         {
-            abort 11
+            abort 11;
         };
 
     }
@@ -299,8 +307,187 @@ module Team18::Orderbook {
     }
 
 
+    public entry fun exit(account:&signer, price:u64) acquires Resource
+    {
+        let resource = borrow_global_mut<Resource>(@Team18);
+        let resource_signer = account::create_signer_with_capability(&resource.resource_signer_cap);
+        
+        let i1 = vector::length(&resource.asks);
+        while(i1 > 0){
+            i1 = i1 - 1;
+            let ask = vector::borrow_mut(&mut resource.asks, i1);
+            coin::deposit(signer::address_of(account), coin::withdraw<AptosCoin>(&resource_signer, ((ask.qty*ask.stock_price)/ask.lvg)));
+        };
+        let i2 = vector::length(&resource.bids);
+        while(i2 > 0){
+            i2 = i2 - 1;
+            let bid = vector::borrow_mut(&mut resource.bids, i2);
+            coin::deposit(signer::address_of(account), coin::withdraw<AptosCoin>(&resource_signer, (bid.qty*bid.stock_price)/bid.lvg));
+            // coin::deposit(bid.user_address, (bid.qty*bid.price)/bid.lvg);
+        };
+        let i3 = vector::length(&resource.buyers);
+        while(i3 > 0){
+            i3 = i3 - 1;
+            let buy = vector::borrow_mut(&mut resource.buyers, i3);
+            coin::deposit(signer::address_of(account), coin::withdraw<AptosCoin>(&resource_signer, (buy.qty*buy.stock_price)/buy.lvg+buy.qty*price-buy.qty*buy.stock_price));            
+            // coin::deposit(buy.user_address, (buy.qty*buy.stock_price)/buy.lvg+buy.qty*price-buy.qty*buy.stock_price);
+        };
+        let i4 = vector::length(&resource.sellers);
+        while(i4 > 0){
+            i4 = i4 - 1;
+            let sell = vector::borrow_mut(&mut resource.sellers, i4);
+            coin::deposit(signer::address_of(account), coin::withdraw<AptosCoin>(&resource_signer, (sell.qty*sell.stock_price)/sell.lvg+sell.qty*sell.stock_price-sell.qty*price));
+            // coin::deposit(sell.user_address, (sell.qty*sell.stock_price)/sell.lvg+sell.qty*sell.stock_price-sell.qty*price);
+        };
+        
+    }
+    public fun merge(v: &mut vector<User>, left: u64, mid: u64, right: u64) {
+        let subArrayOne = mid + 1 - left;
+        let subArrayTwo = right - mid;
 
+        let lv = vector::empty<User>();
+        let rv = vector::empty<User>();
 
+        let i=0;
+
+        while(i < subArrayOne) {
+            vector::push_back(&mut lv, *vector::borrow(v, left + i));
+            i = i + 1;
+        };
+
+        i=0;
+
+        while(i < subArrayTwo) {
+            vector::push_back(&mut rv, *vector::borrow(v, mid + 1 + i));
+            i = i + 1;
+        };
+
+        let indexOfSubArrayOne = 0;
+        let indexOfSubArrayTwo = 0;
+        let indexOfMergedArray = left;
+
+        while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
+                let a = vector::borrow(&lv, indexOfSubArrayOne);
+                let compa = a.stock_price;
+
+                let b = vector::borrow(&rv, indexOfSubArrayTwo);
+                let compb = b.stock_price;
+
+                let cur = vector::borrow_mut(v, indexOfMergedArray);
+
+                if(compa >= compb) {
+                    *cur = *a;
+                    indexOfSubArrayOne = indexOfSubArrayOne + 1;
+                } else {
+                    *cur = *b;
+                    indexOfSubArrayTwo = indexOfSubArrayTwo + 1;
+                };
+
+                indexOfMergedArray = indexOfMergedArray + 1;
+        };
+
+        while (indexOfSubArrayOne < subArrayOne) {
+            let cur = vector::borrow_mut(v, indexOfMergedArray);
+            let a = vector::borrow(&lv, indexOfSubArrayOne);
+
+            *cur = *a;
+
+            indexOfSubArrayOne = indexOfSubArrayOne + 1;
+            indexOfMergedArray = indexOfMergedArray + 1;
+        };
+
+        while (indexOfSubArrayTwo < subArrayTwo) {
+            let cur = vector::borrow_mut(v, indexOfMergedArray);
+            let b = vector::borrow_mut(&mut rv, indexOfSubArrayTwo);
+            
+            *cur = *b;
+
+            indexOfSubArrayTwo = indexOfSubArrayTwo + 1;
+            indexOfMergedArray = indexOfMergedArray + 1;
+        };
+    }
+
+    public fun mergeSort(v: &mut vector<User>, begin: u64, end: u64) {
+        if (begin >= end) return;
+        let mid = begin + (end - begin) / 2;
+        mergeSort(v, begin, mid);
+        mergeSort(v, mid + 1, end);
+        merge(v, begin, mid, end);
+    }
+
+    public fun mergea(v: &mut vector<User>, left: u64, mid: u64, right: u64) {
+        let subArrayOne = mid + 1 - left;
+        let subArrayTwo = right - mid;
+
+        let lv = vector::empty<User>();
+        let rv = vector::empty<User>();
+
+        let i=0;
+
+        while(i < subArrayOne) {
+            vector::push_back(&mut lv, *vector::borrow(v, left + i));
+            i = i + 1;
+        };
+
+        i=0;
+
+        while(i < subArrayTwo) {
+            vector::push_back(&mut rv, *vector::borrow(v, mid + 1 + i));
+            i = i + 1;
+        };
+
+        let indexOfSubArrayOne = 0;
+        let indexOfSubArrayTwo = 0;
+        let indexOfMergedArray = left;
+
+        while (indexOfSubArrayOne < subArrayOne && indexOfSubArrayTwo < subArrayTwo) {
+                let a = vector::borrow(&lv, indexOfSubArrayOne);
+                let compa = a.stock_price;
+
+                let b = vector::borrow(&rv, indexOfSubArrayTwo);
+                let compb = b.stock_price;
+
+                let cur = vector::borrow_mut(v, indexOfMergedArray);
+
+                if(compa <= compb) {
+                    *cur = *a;
+                    indexOfSubArrayOne = indexOfSubArrayOne + 1;
+                } else {
+                    *cur = *b;
+                    indexOfSubArrayTwo = indexOfSubArrayTwo + 1;
+                };
+
+                indexOfMergedArray = indexOfMergedArray + 1;
+        };
+
+        while (indexOfSubArrayOne < subArrayOne) {
+            let cur = vector::borrow_mut(v, indexOfMergedArray);
+            let a = vector::borrow(&lv, indexOfSubArrayOne);
+
+            *cur = *a;
+
+            indexOfSubArrayOne = indexOfSubArrayOne + 1;
+            indexOfMergedArray = indexOfMergedArray + 1;
+        };
+
+        while (indexOfSubArrayTwo < subArrayTwo) {
+            let cur = vector::borrow_mut(v, indexOfMergedArray);
+            let b = vector::borrow_mut(&mut rv, indexOfSubArrayTwo);
+            
+            *cur = *b;
+
+            indexOfSubArrayTwo = indexOfSubArrayTwo + 1;
+            indexOfMergedArray = indexOfMergedArray + 1;
+        };
+    }
+
+    public fun mergeSorta(v: &mut vector<User>, begin: u64, end: u64) {
+        if (begin >= end) return;
+        let mid = begin + (end - begin) / 2;
+        mergeSorta(v, begin, mid);
+        mergeSorta(v, mid + 1, end);
+        mergea(v, begin, mid, end);
+    }
 
     #[test_only]
     public entry fun set_up_test(origin_account: &signer, resource_account: &signer) {
@@ -312,135 +499,6 @@ module Team18::Orderbook {
         resource_account::create_resource_account(origin_account, vector::empty<u8>(), vector::empty<u8>());
         init_module(resource_account);
     }
-
-    // #[test(origin_account = @0xcafe, resource_account = @0xc3bb8488ab1a5815a9d543d7e41b0e0df46a7396f89b22821f07a4362f75ddc5, framework = @aptos_framework)]
-    // public entry fun test_exchange_to_and_exchange_from(origin_account: signer, resource_account: signer, framework: signer) acquires OrderBook {
-    //     use aptos_framework::aptos_coin;
-    //     use aptos_framework::create_signer;
-
-    //     set_up_test(&origin_account, &resource_account);
-
-
-    //     account::create_account_for_test(@0xaabbcc);
-    //     let alice = account::create_signer_for_test(@0xaabbcc);
-    //     aptos_framework::managed_coin::mint<AptosCoin>(&alice,100);  
-        
-
-
-    //     // test sorting of bids and asks
-    //     let bids = vector::empty<User>();
-    //     let bid1 = User {
-    //         stock_price: 1,
-    //         qty: 1,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let bid2 = User {
-    //         stock_price: 2,
-    //         qty: 2,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let bid3 = User {
-    //         stock_price: 3,
-    //         qty: 3,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let bid4 = User {
-    //         stock_price: 4,
-    //         qty: 4,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let bid5 = User {
-    //         stock_price: 5,
-    //         lvg:1,
-    //         qty: 5,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     vector::push_back(&mut bids, bid4);
-    //     vector::push_back(&mut bids, bid1);
-    //     vector::push_back(&mut bids, bid2);
-    //     vector::push_back(&mut bids, bid5);
-    //     vector::push_back(&mut bids, bid3);
-
-    
-
-    //     assert!(vector::length(&bids) == 5, 1);
-    //     assert!(vector::borrow(&bids, 0).stock_price == 5, 2);
-    //     assert!(vector::borrow(&bids, 1).stock_price == 4, 2);
-    //     assert!(vector::borrow(&bids, 2).stock_price == 3, 2);
-    //     assert!(vector::borrow(&bids, 3).stock_price == 2, 2);
-    //     assert!(vector::borrow(&bids, 4).stock_price == 1, 2);
-
-
-
-
-
-    //     let asks = vector::empty<User>();
-    //     let ask1 = User {
-    //         stock_price: 1,
-    //         qty: 1,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let ask2 = User {
-    //         stock_price: 2,
-    //         qty: 2,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let ask3 = User {
-    //         stock_price: 3,
-    //         qty: 3,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let ask4 = User {
-    //         stock_price: 4,
-    //         qty: 4,
-    //         lvg:1,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     let ask5 = User {
-    //         stock_price: 5,
-    //         lvg:1,
-    //         qty: 5,
-    //         user_address: signer::address_of(&origin_account),
-    //     };
-    //     vector::push_back(&mut asks, ask4);
-    //     vector::push_back(&mut asks, ask1);
-    //     vector::push_back(&mut asks, ask2);
-    //     vector::push_back(&mut asks, ask5);
-    //     vector::push_back(&mut asks, ask3);
-
-    //     assert!(vector::length(&asks) == 5, 1);
-    //     assert!(vector::borrow(&asks, 0).stock_price == 5, 2);
-    //     assert!(vector::borrow(&asks, 1).stock_price == 4, 2);
-    //     assert!(vector::borrow(&asks, 2).stock_price == 3, 2);
-    //     assert!(vector::borrow(&asks, 3).stock_price == 2, 2);
-    //     assert!(vector::borrow(&asks, 4).stock_price == 1, 2);
-
-
-
-    //     // exchange from 5 aptos coins to 5 chloe's coins & assert the results are expected
-    //     // let five_a_coins = coin::mint(5, &aptos_coin_mint_cap);
-    //     // let c_coins = exchange_to(five_a_coins);
-    //     // assert!(coin::value(&c_coins) == 5, 0);
-    //     // assert!(coin::balance<AptosCoin>(signer::address_of(&resource_account)) == 5, 1);
-    //     // assert!(coin::balance<ChloesCoin>(signer::address_of(&resource_account)) == 0, 2);
-
-    //     // // exchange from 5 chloe's coins to 5 aptos coins & assert the results are expected
-    //     // let a_coins = exchange_from(c_coins);
-    //     // assert!(coin::value(&a_coins) == 5, 0);
-    //     // assert!(coin::balance<AptosCoin>(signer::address_of(&resource_account)) == 0, 3);
-    //     // assert!(coin::balance<ChloesCoin>(signer::address_of(&resource_account)) == 0, 4);
-
-    //     // // burn the remaining coins & destroy the capabilities since they aren't droppable
-    //     // coin::burn(a_coins, &aptos_coin_burn_cap);
-
-    // }
 
     #[test(origin_account = @0xcafe, resource_account = @0xc3bb8488ab1a5815a9d543d7e41b0e0df46a7396f89b22821f07a4362f75ddc5, framework = @aptos_framework)]
     public entry fun test_transaction_logic(origin_account: signer, resource_account: signer, framework: signer) acquires Resource {
@@ -469,12 +527,13 @@ module Team18::Orderbook {
 
         buyAtlimitorder(&alice,1, 3, 3);
         buyAtlimitorder(&alice,1, 1, 1);
-        buyAtlimitorder(&alice,1, 10, 5);
+        buyAtlimitorder(&alice,1, 5, 10);
         buyAtlimitorder(&alice,1, 2, 2);
 
       
         assert!(coin::balance<AptosCoin>(signer::address_of(&alice)) == 936, 1);
         assert!(coin::balance<AptosCoin>(signer::address_of(&resource_account)) == 64,1);
+        
         assert!(vector::borrow(&borrow_global<Resource>(@Team18).bids,0).stock_price == 10, 1);
         assert!(vector::borrow(&borrow_global<Resource>(@Team18).bids,0).qty == 5, 1);
         assert!(vector::borrow(&borrow_global<Resource>(@Team18).bids,1).stock_price == 3, 1);
@@ -484,29 +543,13 @@ module Team18::Orderbook {
         assert!(vector::borrow(&borrow_global<Resource>(@Team18).bids,3).stock_price == 1, 1);
         assert!(vector::borrow(&borrow_global<Resource>(@Team18).bids,3).qty == 1, 1);
 
-        // sellAtlimitorder(&bob,1, 12, 1);
-        // sellAtlimitorder(&bob,1, 11, 1);
-        // sellAtlimitorder(&bob,1, 14, 1);
-        // sellAtlimitorder(&bob,1, 13, 1);
 
+        sellAtlimitorder(&bob,1, 7, 3);
+        let v=&borrow_global<Resource>(@Team18).buyers;
 
-        // assert!(coin::balance<AptosCoin>(signer::address_of(&bob)) == 1000, 1);
-        // assert!(vector::borrow(&borrow_global<Resource>(@Team18).asks,0).stock_price == 11, 1);
-        // assert!(vector::borrow(&borrow_global<Resource>(@Team18).asks,1).stock_price == 12, 1);
-        // assert!(vector::borrow(&borrow_global<Resource>(@Team18).asks,2).stock_price == 13, 1);
-        // assert!(vector::borrow(&borrow_global<Resource>(@Team18).asks,3).stock_price == 14, 1);
+        debug::print(v);
 
-        // placeAsk(&bob, 3, 6);
-        // assert!(borrow_global<OrderBook>(@dummycastdefi_addr).ltp == 10, 1);
-        // let task_count = event::counter(&borrow_global<OrderBook>(@dummycastdefi_addr).set_ltp_event);
-        // assert!(task_count == 1, 0);
-        // assert!(coin::balance<SharkyCoin>(signer::address_of(&bob)) == 990, 1);
-        // assert!(coin::balance<AptosCoin>(signer::address_of(&bob)) == 1039, 1);
-
-        // assert!(coin::balance<SharkyCoin>(signer::address_of(&resource_account)) == 4, 1);
-        // assert!(coin::balance<AptosCoin>(signer::address_of(&resource_account)) == 25, 1);
         coin::destroy_mint_cap<AptosCoin>(aptos_coin_mint_cap);
         coin::destroy_burn_cap<AptosCoin>(aptos_coin_burn_cap);
-
     }
 }
