@@ -1,11 +1,16 @@
 [package]
-name = "move_project_6"
-version = "0.0.0"
-
-[dependencies]
-AptosFramework = { git = "https://github.com/aptos-labs/aptos-core.git", subdir = "aptos-move/framework/aptos-framework", rev = "mainnet" }
+name = "token-vesting_2"
+version = "1.0.0"
+authors = []
 
 [addresses]
-dummycastdefi_addr = "0xf3291287299f2555c7606eb6ce33f6f2edd46e254a49b10fedbd3cd98854aa79"
-std = "0x1"
-Team18="0x123"
+
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-core.git"
+rev = "mainnet"
+subdir = "aptos-move/framework/aptos-framework"
+
+[dev-dependencies]
