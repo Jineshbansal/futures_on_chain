@@ -13,7 +13,7 @@ import Positions from "./Traderoute/Positions";
 const Trade = () => {
   const [order, setOrder] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
-  const [openOrder, setOpenOrder] = useState(true);
+  const [portfolio, setPortfolio] = useState(1);
   const [tradeWindow, setTradeWindow] = useState(false);
 
   const [middleWindow, setMiddleWindow] = useState(1);
@@ -54,23 +54,33 @@ const Trade = () => {
                   !fullScreen ? "h-[12%]" : "h-[6%] border-b-[0.5px]"
                 }  border-r-[0.5px] border-l-[0.5px] border-t-[0.5px] border-[#383C3F]`}
               >
-                <div className="flex justify-center items-center h-full w-[30%] ">
+                <div className="flex justify-center items-center h-full w-[40%] ">
                   <button
                     className={`flex justify-center items-center h-full w-full ${
-                      openOrder ? "bg-[#061323] bg-opacity-[50%]" : ""
+                      portfolio === 1 ? "bg-[#061323]" : ""
                     }`}
                     onClick={() => {
-                      setOpenOrder(true);
+                      setPortfolio(1);
+                    }}
+                  >
+                    Positions
+                  </button>
+                  <button
+                    className={`flex justify-center items-center h-full w-full ${
+                      portfolio === 2 ? "bg-[#061323]" : ""
+                    }`}
+                    onClick={() => {
+                      setPortfolio(2);
                     }}
                   >
                     Orders
                   </button>
                   <button
                     className={`flex justify-center items-center h-full w-full border-r-[0.5px] border-[#383C3F] ${
-                      !openOrder ? "bg-[#061323] bg-opacity-[50%]" : ""
+                      portfolio === 3 ? "bg-[#061323]" : ""
                     }`}
                     onClick={() => {
-                      setOpenOrder(false);
+                      setPortfolio(3);
                     }}
                   >
                     Filled
@@ -92,7 +102,9 @@ const Trade = () => {
             </div>
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
-                {openOrder ? <OpenOrders></OpenOrders> : <Filled></Filled>}
+                {portfolio === 1 && <Positions></Positions>}
+                {portfolio === 2 && <OpenOrders></OpenOrders>}
+                {portfolio === 3 && <Filled></Filled>}
               </div>
             ) : (
               <></>
@@ -101,7 +113,7 @@ const Trade = () => {
               <div className="flex justify-center items-center h-[8%] w-full">
                 <button
                   className={`flex justify-center items-center w-[50%] h-full border-b-[0.5px] border-[#383C3F] ${
-                    order ? "bg-[#061323] bg-opacity-[50%]" : ""
+                    order ? "bg-[#061323]" : ""
                   }`}
                   onClick={() => {
                     setOrder(true);
@@ -112,7 +124,7 @@ const Trade = () => {
 
                 <button
                   className={`flex justify-center items-center w-[50%] h-full border-b-[0.5px] border-[#383C3F] ${
-                    !order ? "bg-[#061323] bg-opacity-[50%]" : ""
+                    !order ? "bg-[#061323]" : ""
                   }`}
                   onClick={() => {
                     setOrder(false);

@@ -129,7 +129,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   return (
     <>
       <div
-        className={`flex flex-col justify-start items-center h-full w-full border-[0.5px] border-[#383C3F]`}
+        className={`relative flex flex-col justify-start items-center h-full w-full border-[0.5px] border-[#383C3F]`}
       >
         {tradeWindow && (
           <div className="flex justify-center items-center bg-translucent-top h-12 w-full">
@@ -154,7 +154,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
           <button
             className={`flex justify-center items-center w-[50%] h-full border-b-[0.5px] border-[#383C3F]
             ${tradeWindow ? "border-t-[0.5px]" : ""}
-            ${limit ? "bg-[#061323] bg-opacity-[50%]" : ""}`}
+            ${limit ? "bg-[#061323]" : ""}`}
             onClick={() => {
               setLimit(true);
               setSide("Buy");
@@ -169,7 +169,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
           <button
             className={`flex justify-center items-center w-[50%] h-full border-b-[0.5px] border-[#383C3F] 
             ${tradeWindow ? "border-t-[0.5px]" : ""}
-            ${!limit ? "bg-[#061323] bg-opacity-[50%]" : ""}`}
+            ${!limit ? "bg-[#061323]" : ""}`}
             onClick={() => {
               setLimit(false);
               setSide("Buy");
@@ -184,14 +184,14 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
         </div>
         <div className="flex justify-center items-center h-full w-full">
           {limit ? (
-            <form className="flex flex-col justify-between items-center h-full w-full">
-              <div className="flex flex-col justify-between items-center pt-5 gap-5 w-full">
-                <div className="flex justify-center items-center h-10 w-[70%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
+            <form className="flex flex-col justify-between items-center  h-full w-full">
+              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full">
+                <div className="flex justify-center items-center h-10 w-[60%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
                   <div
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
                       side == "Buy"
                         ? "border border-green-500 text-green-500 bg-[#122337]"
-                        : ""
+                        : "text-[#eaf0f6] text-opacity-[60%]"
                     }`}
                     onClick={() => {
                       setSide("Buy");
@@ -207,7 +207,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
                       side === "Sell"
                         ? "border border-red-500 text-red-500 bg-[#122337]"
-                        : ""
+                        : "text-[#eaf0f6] text-opacity-[60%]"
                     }`}
                     onClick={() => {
                       setSide("Sell");
@@ -221,10 +221,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-center items-center w-[70%] gap-5">
-                  <div className="flex justify-center items-start w-full gap-2 h-10 rounded-xl">
+                <div className="flex flex-col justify-center items-center w-[60%] gap-7">
+                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                     <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl">
+                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                         Limit Price
                       </div>
                       <input
@@ -237,9 +237,9 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     </div>
                   </div>
                   <div className="flex justify-center items-center gap-2">
-                    <div className="flex justify-center items-start w-full gap-2 h-10 rounded-xl">
+                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                       <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                           Size
                         </div>
                         <input
@@ -251,9 +251,9 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         ></input>
                       </div>
                     </div>
-                    <div className="flex justify-center items-start w-full gap-2 h-10 rounded-xl">
+                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                       <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                           Price
                         </div>
                         <input
@@ -289,37 +289,57 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center gap-2 w-full">
-                {price / leverage ? (
-                  <div className="flex justify-center items-center w-[60%] bg-[#FFFFFF] bg-opacity-[4%] h-10 text-teal-300 rounded-md text-[15px]">
-                    Marigin :<p>{(price / leverage).toFixed(4)}</p>
+              <div className="absolute bottom-0 flex flex-col justify-center items-center gap-3 w-[80%]">
+                <div className="w-[70%] text-xs">
+                  <div className="flex justify-between items-center">
+                    <div>Expected Price</div>
+                    <div>-</div>
                   </div>
-                ) : (
-                  <></>
-                )}
+                  <div className="flex justify-between items-center">
+                    <div>Marigin</div>
+                    <div>-</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>Fee</div>
+                    <div>-</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>Total</div>
+                    <div>-</div>
+                  </div>
+                </div>
                 <div
+<<<<<<< Updated upstream
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={side === 'buy' ?
                     () => {executeOrder(leverage, size, price, 0)}:
                     () => {executeOrder(leverage, size, price, 0)}
                   }
+=======
+                  className="flex justify-center items-center h-10 w-full mb-1 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
+                  onClick={handleLimitOrder}
+>>>>>>> Stashed changes
                 >
                   Place Order
                 </div>
               </div>
             </form>
           ) : (
-            <form className="flex flex-col justify-between items-center h-full w-full">
-              <div className="flex flex-col justify-between items-center pt-5 gap-5 w-full">
-                <div className="flex justify-center items-center h-10 w-[70%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
+            <form className="flex flex-col justify-between items-center  h-full w-full">
+              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full">
+                <div className="flex justify-center items-center h-10 w-[60%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
                   <div
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
                       side == "Buy"
                         ? "border border-green-500 text-green-500 bg-[#122337]"
-                        : ""
+                        : "text-[#eaf0f6] text-opacity-[60%]"
                     }`}
                     onClick={() => {
                       setSide("Buy");
+                      setLimitPrice(0);
+                      setPrice(0);
+                      setSize(0);
+                      setLeverage(1);
                     }}
                   >
                     Buy
@@ -328,20 +348,24 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
                       side === "Sell"
                         ? "border border-red-500 text-red-500 bg-[#122337]"
-                        : ""
+                        : "text-[#eaf0f6] text-opacity-[60%]"
                     }`}
                     onClick={() => {
                       setSide("Sell");
+                      setLimitPrice(0);
+                      setPrice(0);
+                      setSize(0);
+                      setLeverage(1);
                     }}
                   >
                     Sell
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-center items-center w-[70%] gap-5">
-                  <div className="flex justify-center items-start w-full gap-2 h-10 rounded-xl">
+                <div className="flex flex-col justify-center items-center w-[60%] gap-7">
+                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                     <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl">
+                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                         Size
                       </div>
                       <input
@@ -353,9 +377,9 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                       ></input>
                     </div>
                   </div>
-                  <div className="flex justify-center items-start w-full gap-2 h-10 rounded-xl">
+                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                     <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl">
+                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                         Price
                       </div>
                       <input
@@ -390,20 +414,36 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center gap-2 w-full">
-                {price / leverage ? (
-                  <div className="flex justify-center items-center w-[60%] bg-[#FFFFFF] bg-opacity-[4%] h-10 text-teal-300 rounded-md text-[15px]">
-                    Marigin :<p>{(price / leverage).toFixed(4)}</p>
+              <div className="flex flex-col justify-center items-center gap-3 w-[80%]">
+                <div className="w-[70%] text-xs">
+                  <div className="flex justify-between items-center">
+                    <div>Expected Price</div>
+                    <div>-</div>
                   </div>
-                ) : (
-                  <></>
-                )}
+                  <div className="flex justify-between items-center">
+                    <div>Marigin</div>
+                    <div>-</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>Fee</div>
+                    <div>-</div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div>Total</div>
+                    <div>-</div>
+                  </div>
+                </div>
                 <div
+<<<<<<< Updated upstream
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={side === 'buy' ?
                     () => {executeOrder(leverage, size, price, 2)}:
                     () => {executeOrder(leverage, size, price, 3)}
                   }
+=======
+                  className="flex justify-center items-center h-10 w-full mb-1 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
+                  onClick={handleMarketOrder}
+>>>>>>> Stashed changes
                 >
                   Place Order
                 </div>

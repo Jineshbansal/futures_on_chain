@@ -36,14 +36,16 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   // <React.StrictMode>
-    <AptosWalletAdapterProvider
-      plugins={wallets}
-      autoConnect={true}
-      onError={(error) => {
-        console.log("Custom error handling", error);
-      }}
-    >
+  <AptosWalletAdapterProvider
+    plugins={wallets}
+    autoConnect={true}
+    onError={(error) => {
+      console.log("Custom error handling", error);
+    }}
+  >
+    <div className="scrollbar-thin scrollbar-thumb-gray-400">
       <App />
-    </AptosWalletAdapterProvider>
+    </div>
+  </AptosWalletAdapterProvider>
   // </React.StrictMode>
 );

@@ -79,3 +79,26 @@ body {
     rgba(255, 255, 255, 0.1)
   );
 }
+
+/* Custom scrollbar styles */
+/* WebKit */
+::-webkit-scrollbar {
+  width: 2px; /* Adjust the width of the scrollbar as needed */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #061323; /* Color of the scrollbar thumb */
+  border-radius: 3px; /* Round the scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  width: 10px; /* Adjust the width of the scrollbar on hover */
+}
+
+/* Mozilla Firefox */
+/* Note: Firefox does not support styling the scrollbar directly. These styles apply to a container with scrollbar-styled content */
+/* Add the class `scrollbar-thin` to the container */
+.scrollbar-thin {
+  scrollbar-color: #061323 transparent; /* scrollbar-color accepts two colors: thumb and track */
+  scrollbar-width: thin; /* Set the width of the scrollbar */
+}
