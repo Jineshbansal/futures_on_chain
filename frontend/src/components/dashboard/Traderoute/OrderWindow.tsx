@@ -9,9 +9,15 @@ interface OrderWindowProps {
 }
 
 // function to execute order
-const param = ['buyAtlimitorder', 'sellAtlimitorder', 'buyAtMarketorder', 'sellAtMarketorder']
+const param = [
+  "buyAtlimitorder",
+  "sellAtlimitorder",
+  "buyAtMarketorder",
+  "sellAtMarketorder",
+];
 
-const moduleAddress = "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+const moduleAddress =
+  "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
 
 const OrderWindow: React.FC<OrderWindowProps> = ({
   tradeWindow,
@@ -96,24 +102,24 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     console.log("Hi!");
   };
 
-
   const provider = new Provider(Network.DEVNET);
   const { account } = useWallet();
 
   const executeOrder = async (leverage, size, price, ind) => {
     size = parseFloat(size);
-    let args = [leverage, size, price]
-    if(ind == 2 || ind == 3) args = [leverage, size];
-  
+    let args = [leverage, size, price];
+    if (ind == 2 || ind == 3) args = [leverage, size];
+
     if (!account) return [];
-    const moduleAddress = "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+    const moduleAddress =
+      "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
     // console.log(leverage, parseFloat(size), price);
     const payload = {
       type: "entry_function_payload",
       function: `${moduleAddress}::Orderbook::${param[ind]}`,
       type_arguments: [],
       arguments: args,
-    }
+    };
     try {
       const response = await (window as any).aptos.signAndSubmitTransaction(
         payload
@@ -124,7 +130,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     } catch (error: any) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
@@ -309,16 +315,16 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
                 <div
-<<<<<<< Updated upstream
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                  onClick={side === 'buy' ?
-                    () => {executeOrder(leverage, size, price, 0)}:
-                    () => {executeOrder(leverage, size, price, 0)}
+                  onClick={
+                    side === "buy"
+                      ? () => {
+                          executeOrder(leverage, size, price, 0);
+                        }
+                      : () => {
+                          executeOrder(leverage, size, price, 0);
+                        }
                   }
-=======
-                  className="flex justify-center items-center h-10 w-full mb-1 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                  onClick={handleLimitOrder}
->>>>>>> Stashed changes
                 >
                   Place Order
                 </div>
@@ -434,16 +440,16 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
                 <div
-<<<<<<< Updated upstream
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                  onClick={side === 'buy' ?
-                    () => {executeOrder(leverage, size, price, 2)}:
-                    () => {executeOrder(leverage, size, price, 3)}
+                  onClick={
+                    side === "buy"
+                      ? () => {
+                          executeOrder(leverage, size, price, 2);
+                        }
+                      : () => {
+                          executeOrder(leverage, size, price, 3);
+                        }
                   }
-=======
-                  className="flex justify-center items-center h-10 w-full mb-1 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                  onClick={handleMarketOrder}
->>>>>>> Stashed changes
                 >
                   Place Order
                 </div>
