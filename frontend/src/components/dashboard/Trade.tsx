@@ -134,11 +134,8 @@ const Trade = () => {
                 </button>
               </div>
               <div className="h-[92%]">
-                {order ? (
-                  <OrderBook></OrderBook>
-                ) : (
-                  <RecentTrades></RecentTrades>
-                )}
+                {order && <OrderBook></OrderBook>}
+                {!order && <RecentTrades></RecentTrades>}
               </div>
             </div>
             <div className="col-start-10 col-end-13 row-start-1 row-end-3">
