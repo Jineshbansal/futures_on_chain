@@ -14,7 +14,7 @@ const OrderBook: React.FC = () => {
   const [ask, setAsk] = useState<Order[]>([]);
   const [bid, setBid] = useState<Order[]>([]);
   const moduleAddress =
-    "0xc694f211d4385c16fee79540d3276d6b6f407e252f4814c4596831c2405395eb";
+    "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
 
   const fetchList = async () => {
     try {
@@ -83,7 +83,7 @@ const OrderBook: React.FC = () => {
       >
         {/* <h2>Bids</h2> */}
         <div className="flex flex-col justify-end items-center w-full text-xs">
-          {bid.map((order, index) => (
+          {bid.reverse().map((order, index) => (
             <div
               key={index}
               className="flex justify-evenly items-center h-full w-full"

@@ -80,7 +80,7 @@ const RecentTrades = () => {
   const provider = new Provider(Network.DEVNET);
   const [recentTrades, setRecentTrades] = useState<Trades[]>([]);
   const moduleAddress =
-    "0xc694f211d4385c16fee79540d3276d6b6f407e252f4814c4596831c2405395eb";
+    "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
 
   const fetchList = async () => {
     try {
