@@ -16,9 +16,6 @@ const param = [
   "sellAtMarketorder",
 ];
 
-const moduleAddress =
-  "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
-
 const OrderWindow: React.FC<OrderWindowProps> = ({
   tradeWindow,
   setTradeWindow: _setTradeWindow,
@@ -111,8 +108,8 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     if (ind == 2 || ind == 3) args = [leverage, size];
 
     if (!account) return [];
-    const moduleAddress =
-      "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+    const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
+
     // console.log(leverage, parseFloat(size), price);
     const payload = {
       type: "entry_function_payload",

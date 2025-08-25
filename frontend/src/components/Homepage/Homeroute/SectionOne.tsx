@@ -5,6 +5,7 @@ import corner from "./../../../assets/artifacts/63011f1a01baa4acd99a562a_corner.
 import line from "./../../../assets/artifacts/63011f1ba65dd9532c03e563_line.svg.svg";
 import reload from "./../../../assets/artifacts/Frame 7.svg";
 import phone from "./../../../assets/Pnone 1.svg";
+import { Link } from "react-router-dom";
 
 let SectionOne: React.FC = () => {
   return (
@@ -29,12 +30,14 @@ let SectionOne: React.FC = () => {
             </div>
           </div>
           <div className="flex justify-center items-center gap-5 text-white">
+          <Link to="/dashboard/trade">
             <button className="bg-[#1068CE] px-4 py-3 rounded-full">
               <div className="flex justify-center items-center gap-1">
                 <img src={fire} className="h-6"></img>
                 <p>Start Trading</p>
               </div>
             </button>
+          </Link>
             <button className="bg-[#FFFFFF] px-4 py-3 rounded-full bg-opacity-[4%] drop-shadow-lg shadow-inner">
               <div className="flex justify-center items-center gap-1">
                 <img src={gift} className="h-6"></img>
@@ -52,12 +55,14 @@ let SectionOne: React.FC = () => {
         <div className="flex justify-center items-center gap-5 py-5">
           <div className="flex flex-col justify-center items-center gap-10">
             <div className="flex flex-col justify-center items-center gap-5 text-white">
-              <button className="bg-[#1068CE] px-4 py-3 rounded-full">
-                <div className="flex justify-center items-center gap-1">
-                  <img src={fire} className="h-6"></img>
-                  <p>Start Trading</p>
-                </div>
-              </button>
+              <Link to="/dashboard/trade">
+                <button className="bg-[#1068CE] px-4 py-3 rounded-full">
+                  <div className="flex justify-center items-center gap-1">
+                    <img src={fire} className="h-6"></img>
+                    <p>Start Trading</p>
+                  </div>
+                </button>
+              </Link>
               <button className="bg-[#FFFFFF] px-4 py-3 rounded-full bg-opacity-[6%] shadow-inner">
                 <div className="flex justify-center items-center gap-1">
                   <img src={gift} className="h-6"></img>
