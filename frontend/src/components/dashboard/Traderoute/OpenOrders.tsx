@@ -11,45 +11,18 @@ interface Order {
 
 function specificUserTransaction(currArr: Order[], account: any) {
   console.log(account?.address, "moye");
-  currArr.filter((val) => {
+  currArr!.filter((val) => {
     val.user_address === account?.address;
   });
-  console.log("moye moye curr arr", currArr);
   return currArr;
 }
-const OpenOrders = () => {
+const OpenOrders = ({currAsk, currBid}:{currAsk:Order[], currBid:Order[]}) => {
   const { account } = useWallet();
-  const provider = new Provider(Network.DEVNET);
-  const [ask, setAsk] = useState<Order[]>([]);
-  const [bid, setBid] = useState<Order[]>([]);
-  const moduleAddress =
-    "0xc694f211d4385c16fee79540d3276d6b6f407e252f4814c4596831c2405395eb";
 
-  const fetchList = async () => {
-    try {
-      // Assume provider.getAccountResource fetches data from an API
-      const response = await provider.getAccountResource(
-        moduleAddress,
-        `${moduleAddress}::Orderbook::Resource`
-      );
-      const currAsk: Order[] = response.data.asks;
-      const currBid: Order[] = response.data.bids;
-
-      setAsk(specificUserTransaction(currAsk, account));
-      setBid(specificUserTransaction(currBid, account));
-
-      console.log("data :moye moye", currAsk, currBid);
-    } catch (error) {
-      console.log(error, "Error occurred moye!");
-    }
-  };
-
-  useEffect(() => {
-    fetchList();
-    const fetchInterval = setInterval(() => {
-      fetchList();
-    }, 500);
-  }, []);
+      const userAsk = specificUserTransaction(currAsk, account);
+      const userBid = specificUserTransaction(currBid, account);
+      console.log("moye moye curr arr", userAsk);
+      console.log("moye moye curr arr", userBid);
 
   return (
     <>

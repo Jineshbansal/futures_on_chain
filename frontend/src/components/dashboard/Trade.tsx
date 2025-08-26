@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Graph from "./Traderoute/Graph";
 import CoinInformation from "./Traderoute/CoinInformation";
 import OrderBook from "./Traderoute/OrderBook";
@@ -9,13 +9,61 @@ import OpenOrders from "./Traderoute/OpenOrders";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Filled from "./Traderoute/Filled";
 import Positions from "./Traderoute/Positions";
+import { Provider, Network } from "aptos";
+
+
+interface Order {
+  lvg: string;
+  qty: string;
+  stock_price: string;
+  user_address: string;
+}
 
 const Trade = () => {
+  const provider = new Provider(Network.DEVNET);
+
+  /// pulling market data
+  const [ask, setAsk] = useState<Order[]>([]);
+  const [bid, setBid] = useState<Order[]>([]);
+  // const [askDepth, setAskDepth] = useState<>([]);
+  // const [bidDepth, setBidDepth] = useState<>([]);
+  const moduleAddress =
+    "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+
+  const fetchList = async () => {
+    try {
+      // Assume provider.getAccountResource fetches data from an API
+      const response = await provider.getAccountResource(
+        moduleAddress,
+        `${moduleAddress}::Orderbook::Resource`
+      );
+      const currAsk: Order[] = response.data.asks.slice(0, 10); 
+      const currBid: Order[] = response.data.bids.slice(0, 10);
+      // const currAskMap: Order[] = response.data.mktdpthseller.slice(0, 10);
+      // const currBidMap: Order[] = response.data.mktdpthbuyer.slice(0, 10);
+
+      setAsk(currAsk);
+      setBid(currBid);
+      // setAskDepth(currAskMap);
+      // setBidDepth(currBidMap);
+      console.log("data aa gya :", currAsk, currBid);
+    } catch (error) {
+      console.log(error, "Error occurred!");
+    }
+  };
+
+  useEffect(() => {
+    fetchList();
+    const fetchInterval = setInterval(() => {
+      fetchList();
+    }, 1000);
+  }, []);
+
+
   const [order, setOrder] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
   const [portfolio, setPortfolio] = useState(1);
   const [tradeWindow, setTradeWindow] = useState(false);
-
   const [middleWindow, setMiddleWindow] = useState(1);
   const [bottomWindow, setBottomWindow] = useState(1);
 
@@ -103,7 +151,7 @@ const Trade = () => {
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
                 {portfolio === 1 && <Positions></Positions>}
-                {portfolio === 2 && <OpenOrders></OpenOrders>}
+                {portfolio === 2 && <OpenOrders currAsk={ask} currBid={bid}></OpenOrders>}
                 {portfolio === 3 && <Filled></Filled>}
               </div>
             ) : (
@@ -134,7 +182,7 @@ const Trade = () => {
                 </button>
               </div>
               <div className="h-[92%]">
-                {order && <OrderBook></OrderBook>}
+                {order && <OrderBook asks={ask} bids={bid}></OrderBook>}
                 {!order && <RecentTrades></RecentTrades>}
               </div>
             </div>
@@ -206,7 +254,7 @@ const Trade = () => {
                 )}
                 {middleWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <OrderBook></OrderBook>
+                    <OrderBook asks={ask} bids={bid}></OrderBook>
                   </div>
                 )}
                 {middleWindow === 3 && (
@@ -263,7 +311,7 @@ const Trade = () => {
                 )}
                 {bottomWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <OpenOrders></OpenOrders>
+                    <OpenOrders currAsk={ask} currBid={bid}></OpenOrders>
                   </div>
                 )}
                 {bottomWindow === 3 && (
