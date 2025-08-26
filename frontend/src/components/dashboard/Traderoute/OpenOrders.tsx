@@ -23,7 +23,7 @@ const OpenOrders = () => {
   const [ask, setAsk] = useState<Order[]>([]);
   const [bid, setBid] = useState<Order[]>([]);
   const moduleAddress =
-    "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+    "0xc694f211d4385c16fee79540d3276d6b6f407e252f4814c4596831c2405395eb";
 
   const fetchList = async () => {
     try {

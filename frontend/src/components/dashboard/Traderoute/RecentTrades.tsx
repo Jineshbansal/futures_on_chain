@@ -101,7 +101,7 @@ const RecentTrades = () => {
     fetchList();
     const fetchInterval = setInterval(() => {
       fetchList();
-    }, 5000);
+    }, 1000);
   }, []);
 
   return (
