@@ -17,6 +17,7 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
+  pos?: boolean; 
 }
 
 const Trade = () => {
@@ -25,10 +26,11 @@ const Trade = () => {
   /// pulling market data
   const [ask, setAsk] = useState<Order[]>([]);
   const [bid, setBid] = useState<Order[]>([]);
+  const [buyers, setBuyers] = useState<Order[]>([]);
   // const [askDepth, setAskDepth] = useState<>([]);
   // const [bidDepth, setBidDepth] = useState<>([]);
   const moduleAddress =
-    "0xb29675510ed51c652fb018da70c38e6e3ed2e5804044bb7d24d8c6dcbf94760d";
+    "0x75594fa17a1a4f94dc5fbaf2522ab18e6f93d5e8d00eba129a48d0a8f0f7576a";
 
   const fetchList = async () => {
     try {
@@ -37,16 +39,20 @@ const Trade = () => {
         moduleAddress,
         `${moduleAddress}::Orderbook::Resource`
       );
+      console.log("response is:", response.data)
       const currAsk: Order[] = response.data.asks.slice(0, 10); 
-      const currBid: Order[] = response.data.bids.slice(0, 10);
+      const currBid: Order[] = response.data.bids.reverse().slice(0, 10);
+      const currBuyers: Order[] = response.data.buyers.reverse().slice(0,50);
+      // const currSellers: Order[] = response.data.sellers;
       // const currAskMap: Order[] = response.data.mktdpthseller.slice(0, 10);
       // const currBidMap: Order[] = response.data.mktdpthbuyer.slice(0, 10);
 
       setAsk(currAsk);
       setBid(currBid);
+      setBuyers(currBuyers)
       // setAskDepth(currAskMap);
       // setBidDepth(currBidMap);
-      console.log("data aa gya :", currAsk, currBid);
+      console.log("data aa gya :", currAsk, currBid, currBuyers);
     } catch (error) {
       console.log(error, "Error occurred!");
     }
@@ -183,7 +189,7 @@ const Trade = () => {
               </div>
               <div className="h-[92%]">
                 {order && <OrderBook asks={ask} bids={bid}></OrderBook>}
-                {!order && <RecentTrades></RecentTrades>}
+                {!order && <RecentTrades data={buyers}></RecentTrades>}
               </div>
             </div>
             <div className="col-start-10 col-end-13 row-start-1 row-end-3">
@@ -259,7 +265,7 @@ const Trade = () => {
                 )}
                 {middleWindow === 3 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <RecentTrades></RecentTrades>
+                    <RecentTrades data={buyers}></RecentTrades>
                   </div>
                 )}
               </div>

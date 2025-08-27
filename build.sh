@@ -14,13 +14,13 @@ cd frontend
 yarn
 
 # check if user wants to open the dapp
-echo Do you want to run dapp (yes/no)?
+echo "Do you want to run dapp (yes/no)"?
 read varname
 
-if [ $varname == 'yes']; then
-    echo running dapp
+if [ $varname == 'yes' ]; then
+    echo "running dapp"
     yarn dev
 else 
     cd ..
-    echo run `yarn dev` to run the dapp
+    echo "To run the dapp: cd frontend && yarn dev"
 fi
