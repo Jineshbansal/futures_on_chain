@@ -5,17 +5,27 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
+  pos?: Boolean;
 }
-const OrderBook= ({asks, bids}:{asks:Order[]; bids:Order[]}) => {
+const OrderBook = ({
+  asks,
+  bids,
+  ltp,
+}: {
+  asks: Order[];
+  bids: Order[];
+  ltp: Order;
+}) => {
+  console.log(ltp, "hi");
 
   return (
     <div className="flex flex-col justify-between items-center h-full w-full border-b-[0.5px] border-[#383C3F]">
-      <div className="h-[10%] w-full flex justify-between items-center">
+      <div className="h-[10%] w-full flex justify-between items-center text-xs text-[#eaf0f6] text-opacity-[60%]">
         <div className="flex justify-center items-center h-full w-full">
-          Price
+          Y-axis: price
         </div>
         <div className="flex justify-center items-center h-full w-full">
-          Quantity
+          X-axis: qty
         </div>
       </div>
 
@@ -27,8 +37,12 @@ const OrderBook= ({asks, bids}:{asks:Order[]; bids:Order[]}) => {
           <DepthChart side="asks" data={asks}></DepthChart>
         </div>
       </div>
-      <div className="h-[6%] relative w-full flex flex-col justify-center items-center border-b-[0.5px] border-t-[0.5px] md:border-[#383C3F]">
-        Last Traded Price
+      <div
+        className={`h-[6%] relative w-full flex flex-col justify-center items-center font-semibold border-b-[0.5px] border-t-[0.5px]  md:border-[#383C3F] ${
+          ltp?.pos ? "text-green-500" : "text-red-500"
+        }`}
+      >
+        {ltp?.stock_price}
       </div>
       <div
         className="h-[43%] w-full flex flex-col justify-start items-center overflow-y-hidden"
@@ -43,5 +57,3 @@ const OrderBook= ({asks, bids}:{asks:Order[]; bids:Order[]}) => {
 };
 
 export default OrderBook;
-
-

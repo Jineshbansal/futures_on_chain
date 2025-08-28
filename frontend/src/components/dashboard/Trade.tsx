@@ -11,13 +11,12 @@ import Filled from "./Traderoute/Filled";
 import Positions from "./Traderoute/Positions";
 import { Provider, Network } from "aptos";
 
-
 interface Order {
   lvg: string;
   qty: string;
   stock_price: string;
   user_address: string;
-  pos?: boolean; 
+  pos?: boolean;
 }
 
 const Trade = () => {
@@ -27,6 +26,7 @@ const Trade = () => {
   const [ask, setAsk] = useState<Order[]>([]);
   const [bid, setBid] = useState<Order[]>([]);
   const [buyers, setBuyers] = useState<Order[]>([]);
+  const [ltp, setLtp] = useState<Order>();
   // const [askDepth, setAskDepth] = useState<>([]);
   // const [bidDepth, setBidDepth] = useState<>([]);
   const moduleAddress =
@@ -39,17 +39,18 @@ const Trade = () => {
         moduleAddress,
         `${moduleAddress}::Orderbook::Resource`
       );
-      console.log("response is:", response.data)
-      const currAsk: Order[] = response.data.asks.slice(0, 10); 
+      console.log("response is:", response.data);
+      const currAsk: Order[] = response.data.asks.slice(0, 10);
       const currBid: Order[] = response.data.bids.reverse().slice(0, 10);
-      const currBuyers: Order[] = response.data.buyers.reverse().slice(0,50);
+      const currBuyers: Order[] = response.data.buyers.reverse().slice(0, 50);
       // const currSellers: Order[] = response.data.sellers;
       // const currAskMap: Order[] = response.data.mktdpthseller.slice(0, 10);
       // const currBidMap: Order[] = response.data.mktdpthbuyer.slice(0, 10);
 
       setAsk(currAsk);
       setBid(currBid);
-      setBuyers(currBuyers)
+      setBuyers(currBuyers);
+      setLtp(currBuyers[0]);
       // setAskDepth(currAskMap);
       // setBidDepth(currBidMap);
       console.log("data aa gya :", currAsk, currBid, currBuyers);
@@ -64,7 +65,6 @@ const Trade = () => {
       fetchList();
     }, 1000);
   }, []);
-
 
   const [order, setOrder] = useState(true);
   const [fullScreen, setFullScreen] = useState(false);
@@ -157,7 +157,13 @@ const Trade = () => {
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
                 {portfolio === 1 && <Positions></Positions>}
-                {portfolio === 2 && <OpenOrders currAsk={ask} currBid={bid}></OpenOrders>}
+                {portfolio === 2 && (
+                  <OpenOrders
+                    currAsk={ask}
+                    currBid={bid}
+                    ltp={ltp}
+                  ></OpenOrders>
+                )}
                 {portfolio === 3 && <Filled></Filled>}
               </div>
             ) : (
@@ -188,7 +194,9 @@ const Trade = () => {
                 </button>
               </div>
               <div className="h-[92%]">
-                {order && <OrderBook asks={ask} bids={bid}></OrderBook>}
+                {order && (
+                  <OrderBook asks={ask} bids={bid} ltp={ltp}></OrderBook>
+                )}
                 {!order && <RecentTrades data={buyers}></RecentTrades>}
               </div>
             </div>
@@ -260,7 +268,7 @@ const Trade = () => {
                 )}
                 {middleWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <OrderBook asks={ask} bids={bid}></OrderBook>
+                    <OrderBook asks={ask} bids={bid} ltp={ltp}></OrderBook>
                   </div>
                 )}
                 {middleWindow === 3 && (

@@ -6,12 +6,10 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
-  pos?: boolean; 
+  pos?: boolean;
 }
 
-const RecentTrades = ({data}:{data:Order[]}) => {
-
-
+const RecentTrades = ({ data }: { data: Order[] }) => {
   return (
     <>
       <div className="flex flex-col justify-center items-center h-full w-full border-b-[0.5px] border-[#383C3F]">
