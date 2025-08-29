@@ -57,12 +57,19 @@ const DepthChart = ({
           x: {
             reverse: true, // Display bars from right to left
             beginAtZero: true,
+            position: side === "bids" ? 'bottom' : 'top',
+            ticks: {
+              color: "teal"
+            },
             grid:{
               display : false,
             }
           },
           y: {
             stacked: true, // Stack the bars
+            ticks: {
+              color: "teal"
+            },
             grid :{
               display : false,
             }

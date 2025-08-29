@@ -270,7 +270,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center w-[70%]">
+                <div className="flex items-center justify-center w-[60%]">
                   <div className="flex flex-col gap-2 w-full">
                     <label
                       htmlFor="leverage"
@@ -395,7 +395,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-center w-[70%]">
+                <div className="flex items-center justify-center w-[60%]">
                   <div className="flex flex-col gap-2 w-full">
                     <label
                       htmlFor="leverage"

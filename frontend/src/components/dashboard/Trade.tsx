@@ -16,7 +16,8 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
-  pos?: boolean;
+  pos?: boolean; 
+  timestamp: string;
 }
 
 const Trade = () => {
@@ -30,11 +31,10 @@ const Trade = () => {
   // const [askDepth, setAskDepth] = useState<>([]);
   // const [bidDepth, setBidDepth] = useState<>([]);
   const moduleAddress =
-    "0x75594fa17a1a4f94dc5fbaf2522ab18e6f93d5e8d00eba129a48d0a8f0f7576a";
+    "0x63f0d056d061a8f5f3370a1d1ce2ae15ac84a21ad6d80071710261f98403c41a";
 
   const fetchList = async () => {
     try {
-      // Assume provider.getAccountResource fetches data from an API
       const response = await provider.getAccountResource(
         moduleAddress,
         `${moduleAddress}::Orderbook::Resource`
