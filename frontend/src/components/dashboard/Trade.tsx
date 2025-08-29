@@ -23,15 +23,15 @@ interface Order {
 const Trade = () => {
   const provider = new Provider(Network.DEVNET);
 
-  /// pulling market data
   const [ask, setAsk] = useState<Order[]>([]);
   const [bid, setBid] = useState<Order[]>([]);
   const [buyers, setBuyers] = useState<Order[]>([]);
+  const [sellers, setSellers] = useState<Order[]>([]);
   const [ltp, setLtp] = useState<Order>();
   // const [askDepth, setAskDepth] = useState<>([]);
   // const [bidDepth, setBidDepth] = useState<>([]);
   const moduleAddress =
-    "0x63f0d056d061a8f5f3370a1d1ce2ae15ac84a21ad6d80071710261f98403c41a";
+    "0xcbf130f69088ca4dd00e1e372f83d37e3f73fb49d837855a119432414880389e";
 
   const fetchList = async () => {
     try {
@@ -40,20 +40,19 @@ const Trade = () => {
         `${moduleAddress}::Orderbook::Resource`
       );
       console.log("response is:", response.data);
-      const currAsk: Order[] = response.data.asks.slice(0, 10);
-      const currBid: Order[] = response.data.bids.reverse().slice(0, 10);
-      const currBuyers: Order[] = response.data.buyers.reverse().slice(0, 50);
-      // const currSellers: Order[] = response.data.sellers;
+      const currAsk: Order[] = response.data.asks;
+      const currBid: Order[] = response.data.bids;
+      const currBuyers: Order[] = response.data.buyers;
+      const currSellers: Order[] = response.data.sellers;
       // const currAskMap: Order[] = response.data.mktdpthseller.slice(0, 10);
       // const currBidMap: Order[] = response.data.mktdpthbuyer.slice(0, 10);
-
       setAsk(currAsk);
       setBid(currBid);
       setBuyers(currBuyers);
-      setLtp(currBuyers[0]);
+      setSellers(currSellers);
+      setLtp(currBuyers.reverse()[0]);
       // setAskDepth(currAskMap);
       // setBidDepth(currBidMap);
-      console.log("data aa gya :", currAsk, currBid, currBuyers);
     } catch (error) {
       console.log(error, "Error occurred!");
     }
@@ -61,7 +60,7 @@ const Trade = () => {
 
   useEffect(() => {
     fetchList();
-    const fetchInterval = setInterval(() => {
+    setInterval(() => {
       fetchList();
     }, 1000);
   }, []);
@@ -195,9 +194,9 @@ const Trade = () => {
               </div>
               <div className="h-[92%]">
                 {order && (
-                  <OrderBook asks={ask} bids={bid} ltp={ltp}></OrderBook>
+                  <OrderBook asks={ask.slice(0,10)} bids={bid.reverse().slice(0,10)} ltp={ltp}></OrderBook>
                 )}
-                {!order && <RecentTrades data={buyers}></RecentTrades>}
+                {!order && <RecentTrades data={buyers.reverse().slice(0, 50)}></RecentTrades>}
               </div>
             </div>
             <div className="col-start-10 col-end-13 row-start-1 row-end-3">
@@ -268,12 +267,12 @@ const Trade = () => {
                 )}
                 {middleWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <OrderBook asks={ask} bids={bid} ltp={ltp}></OrderBook>
+                    <OrderBook asks={ask.slice(0,10)} bids={bid.reverse().slice(0,10)} ltp={ltp}></OrderBook>
                   </div>
                 )}
                 {middleWindow === 3 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <RecentTrades data={buyers}></RecentTrades>
+                    <RecentTrades data={buyers.reverse().slice(0, 50)}></RecentTrades>
                   </div>
                 )}
               </div>

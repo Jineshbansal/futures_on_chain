@@ -33,12 +33,12 @@ const OrderBook = ({
         className="h-[43%] w-full flex flex-col justify-end items-center overflow-y-hidden text-xs"
         id="asks"
       >
-        <div className="flex h-full w-full">
+        <div className="flex justify-center items-center h-full w-full">
           <DepthChart side="asks" data={asks}></DepthChart>
         </div>
       </div>
       <div
-        className={`h-[6%] relative w-full flex flex-col justify-center items-center font-semibold border-b-[0.5px] border-t-[0.5px]  md:border-[#383C3F] ${
+        className={`h-[6%] relative w-full flex flex-col justify-center items-center font-semibold border-b-[0.5px] border-t-[0.5px] border-[#383C3F] ${
           ltp?.pos ? "text-green-500" : "text-red-500"
         }`}
       >
@@ -48,7 +48,7 @@ const OrderBook = ({
         className="h-[43%] w-full flex flex-col justify-start items-center overflow-y-hidden"
         id="bids"
       >
-        <div className="flex h-full w-full">
+        <div className="flex justify-center items-center h-full w-full">
           <DepthChart side="bids" data={bids}></DepthChart>
         </div>
       </div>

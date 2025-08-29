@@ -92,11 +92,12 @@ const DepthChart = ({
 
     // Function to resize the chart canvas to match its parent height
     const resizeChart = () => {
-      const parent = barChartRef.current.parentElement;
+      const parent = barChartRef?.current?.parentElement;
       const computedStyle = getComputedStyle(parent);
       const height = parseInt(computedStyle.height);
+      const width = parseInt(computedStyle.width)
 
-      myChart.resize(parent.clientWidth, height);
+      myChart.resize(width, height);
     };
 
     // Initial resize and event listener for window resize
