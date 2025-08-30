@@ -7,13 +7,17 @@ interface Order {
   user_address: string;
   pos?: Boolean;
 }
+interface Depth {
+  key: string;
+  value: string;
+}
 const OrderBook = ({
   asks,
   bids,
   ltp,
 }: {
-  asks: Order[];
-  bids: Order[];
+  asks: Depth[];
+  bids: Depth[];
   ltp: Order;
 }) => {
   console.log(ltp, "hi");

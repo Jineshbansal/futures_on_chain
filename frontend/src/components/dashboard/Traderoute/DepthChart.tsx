@@ -8,21 +8,24 @@ interface Order {
   stock_price: string;
   user_address: string;
 }
-
+interface Depth {
+  key: string;
+  value: string;
+}
 const DepthChart = ({
   side,
   data,
 }: {
   side: "bids" | "asks";
-  data: Order[];
+  data: Depth[];
 }) => {
   console.log("mounted", data);
   const barChartRef = useRef<HTMLCanvasElement>(null);
   const [chartInstance, setChartInstance] = useState<Chart<"bar"> | null>(null);
 
   useEffect(() => {
-    const quantities = data.map((item) => parseInt(item.qty));
-    const labels = data.map((item) => item.stock_price);
+    const quantities = data.map((item) => parseInt(item.value));
+    const labels = data.map((item) => item.key);
     console.log(quantities, "moye moye");
     if (chartInstance) {
       chartInstance.destroy(); // Destroy the previous Chart instance
@@ -57,27 +60,27 @@ const DepthChart = ({
           x: {
             reverse: true, // Display bars from right to left
             beginAtZero: true,
-            position: side === "bids" ? 'bottom' : 'top',
+            position: side === "bids" ? "bottom" : "top",
             ticks: {
-              color: "teal"
+              color: "teal",
             },
-            grid:{
-              display : false,
-            }
+            grid: {
+              display: false,
+            },
           },
           y: {
             stacked: true, // Stack the bars
             ticks: {
-              color: "teal"
+              color: "teal",
             },
-            grid :{
-              display : false,
-            }
+            grid: {
+              display: false,
+            },
           },
         },
         plugins: {
-          legend : {
-            display : false,
+          legend: {
+            display: false,
           },
           tooltip: {
             enabled: true,
@@ -95,9 +98,8 @@ const DepthChart = ({
       const parent = barChartRef?.current?.parentElement;
       const computedStyle = getComputedStyle(parent);
       const height = parseInt(computedStyle.height);
-      const width = parseInt(computedStyle.width)
 
-      myChart.resize(width, height);
+      myChart.resize(parent?.clientWidth, height);
     };
 
     // Initial resize and event listener for window resize

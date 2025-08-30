@@ -16,8 +16,13 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
-  pos?: boolean; 
+  pos?: boolean;
   timestamp: string;
+}
+
+interface Depth {
+  key: string;
+  value: string;
 }
 
 const Trade = () => {
@@ -28,10 +33,10 @@ const Trade = () => {
   const [buyers, setBuyers] = useState<Order[]>([]);
   const [sellers, setSellers] = useState<Order[]>([]);
   const [ltp, setLtp] = useState<Order>();
-  // const [askDepth, setAskDepth] = useState<>([]);
-  // const [bidDepth, setBidDepth] = useState<>([]);
+  const [askDepth, setAskDepth] = useState<Depth[]>([]);
+  const [bidDepth, setBidDepth] = useState<Depth[]>([]);
   const moduleAddress =
-    "0xcbf130f69088ca4dd00e1e372f83d37e3f73fb49d837855a119432414880389e";
+    "0xad0a42d57cf62e452cb0a672f426b85da806cdf51cddcb61a3ef33ce4ede67e2";
 
   const fetchList = async () => {
     try {
@@ -44,15 +49,26 @@ const Trade = () => {
       const currBid: Order[] = response.data.bids;
       const currBuyers: Order[] = response.data.buyers;
       const currSellers: Order[] = response.data.sellers;
-      // const currAskMap: Order[] = response.data.mktdpthseller.slice(0, 10);
-      // const currBidMap: Order[] = response.data.mktdpthbuyer.slice(0, 10);
+      const currAskMap: Depth[] = response.data.mktdpthseller.data;
+      const currBidMap: Depth[] = response.data.mktdpthbuyer.data;
+      const currAskMap1: Depth[] = [];
+      const currBidMap1: Depth[] = [];
+      for (let i = currBidMap.length-1; i >=0 ; i--) {
+        if (currBidMap[i].value != "0") currBidMap1.push(currBidMap[i]);
+      }
+      for (let i = currAskMap.length-1; i >=0 ; i--) {
+        if (currAskMap[i].value != "0") currAskMap1.push(currAskMap[i]);
+      }
+
       setAsk(currAsk);
       setBid(currBid);
       setBuyers(currBuyers);
       setSellers(currSellers);
       setLtp(currBuyers.reverse()[0]);
-      // setAskDepth(currAskMap);
-      // setBidDepth(currBidMap);
+      setAskDepth(currAskMap1);
+      setBidDepth(currBidMap1);
+      console.log(currAskMap1, currBidMap1, "aaja bhai");
+      console.log(currAskMap, currBidMap, "aaja bhai 2");
     } catch (error) {
       console.log(error, "Error occurred!");
     }
@@ -194,9 +210,17 @@ const Trade = () => {
               </div>
               <div className="h-[92%]">
                 {order && (
-                  <OrderBook asks={ask.slice(0,10)} bids={bid.reverse().slice(0,10)} ltp={ltp}></OrderBook>
+                  <OrderBook
+                    asks={askDepth.slice(0, 10)}
+                    bids={bidDepth.slice(0, 10)}
+                    ltp={ltp}
+                  ></OrderBook>
                 )}
-                {!order && <RecentTrades data={buyers.reverse().slice(0, 50)}></RecentTrades>}
+                {!order && (
+                  <RecentTrades
+                    data={buyers.reverse().slice(0, 50)}
+                  ></RecentTrades>
+                )}
               </div>
             </div>
             <div className="col-start-10 col-end-13 row-start-1 row-end-3">
@@ -267,12 +291,18 @@ const Trade = () => {
                 )}
                 {middleWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <OrderBook asks={ask.slice(0,10)} bids={bid.reverse().slice(0,10)} ltp={ltp}></OrderBook>
+                    <OrderBook
+                      asks={askDepth.slice(0, 10)}
+                      bids={bidDepth.slice(0, 10)}
+                      ltp={ltp}
+                    ></OrderBook>
                   </div>
                 )}
                 {middleWindow === 3 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <RecentTrades data={buyers.reverse().slice(0, 50)}></RecentTrades>
+                    <RecentTrades
+                      data={buyers.reverse().slice(0, 50)}
+                    ></RecentTrades>
                   </div>
                 )}
               </div>
