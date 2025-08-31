@@ -15,6 +15,7 @@ load_dotenv()
 
 app = typer.Typer()
 
+
 NODE_URL = os.getenv("APTOS_NODE_URL", "https://fullnode.devnet.aptoslabs.com/v1")
 FAUCET_URL = os.getenv(
     "APTOS_FAUCET_URL",
@@ -22,6 +23,9 @@ FAUCET_URL = os.getenv(
 )  
 
 rest_client = RestClient(NODE_URL)
+
+def underline_text(text):
+    return "\033[4m" + text + "\033[0m"
 
 async def call_aptos_function(user ,module, function, type_args, args):
     payload = EntryFunction.natural(
@@ -33,28 +37,71 @@ async def call_aptos_function(user ,module, function, type_args, args):
     txn = await rest_client.create_bcs_signed_transaction(user, TransactionPayload(payload))
     resp = await rest_client.submit_bcs_transaction(txn)
     await rest_client.wait_for_transaction(resp)
-    print(f"You can check more details of your transaction using this tx_hash: {resp}")
+    
+    print(f"Your tx_hash link: " + underline_text(f"https://explorer.aptoslabs.com/txn/{resp}/userTxnOverview?network=devnet"))
     return resp
 
 contract_address = os.environ['MODULE_ADDRESS']
-me = Account.load_key("0xcd1eebe9cb95b6a646f9aa56a4552fbd48003aee698a328bd0725483a523ad7f")
 private_key = os.environ['PRIVATE_KEY']
+me = Account.load_key(private_key)
+
+async def exitAll():
+    await call_aptos_function(me, "Orderbook", "Exit_all", [], [])
 
 async def buyLim(lvg, qty, price, private_key):
-    me = Account.load_key(private_key)
     await call_aptos_function(me, "Orderbook", "buyAtlimitorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)])
 
 async def sellLim(lvg, qty, price, private_key):
-    me = Account.load_key(private_key)
     await call_aptos_function(me, "Orderbook", "sellAtlimitorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)])
 
 async def buyMarket(lvg, qty, private_key):
-    me = Account.load_key(private_key)
     await call_aptos_function(me, "Orderbook", "buyAtMarketorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(Serializer.u64)])
 
 async def sellMarket(lvg, qty, private_key):
-    me = Account.load_key(private_key)
     await call_aptos_function(me, "Orderbook", "sellAtMarketorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(Serializer.u64)])
+
+async def depositMargin(amt):
+    await call_aptos_function(me, "Orderbook", "deposit_margin", [], [TransactionArgument(amt, Serializer.u64)]);
+
+async def exitOrder(timestamp, lvg, bid, qty, price):
+    await call_aptos_function(me, "Orderbook", "exitOrder", [], [TransactionArgument(timestamp, Serializer.u64), TransactionArgument(lvg, Serializer.u64), TransactionArgument(bid, Serializer.bool), TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)]);
+
+async def exitPos(timestamp, lvg, buy, qty, price):
+    await call_aptos_function(me, "Orderbook", "exitOrder", [], [TransactionArgument(timestamp, Serializer.u64), TransactionArgument(lvg, Serializer.u64), TransactionArgument(buy, Serializer.bool), TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)]);
+
+##################################################
+@app.command()
+def exitorder(timestamp: int, lvg: int, bid: str, qty: int, price: int):
+    if bid=='bid':
+        bid=True
+    elif bid=='ask':
+        bid=False
+    else:
+        print(f"Please type either 'bid' or 'ask' !!!")
+        return
+    
+    asyncio.run(exitOrder(timestamp, lvg, bid, qty, price))
+
+@app.command()
+def exitposition(timestamp: int, lvg: int, buy: str, qty: int, price: int):
+    if buy=='buy':
+        buy=True
+    elif buy=='sell':
+        buy=False
+    else:
+        print(f"Please type either 'buy' or 'sell' !!!")
+        return
+    
+    asyncio.run(exitPos(timestamp, lvg, buy, qty, price))
+
+@app.command()
+def depositmargin(amt: int):
+    asyncio.run(depositMargin(amt));
+    print(cli_box.rounded(f"Amount Deposited to {me.address()}"))
+
+@app.command()
+def exitall():
+    asyncio.run(exitAll());
 
 @app.command()
 def buyatlimitorder(lvg: int, qty: int, price: int, private_key: str = private_key):
@@ -77,8 +124,8 @@ def sellatmarketorder(lvg: int, qty: int, price: int, private_key: str = private
     print(cli_box.rounded(f"Order Details: \n Levearage: {lvg}x\nQuantity: {qty}\nLimit Price: {price}"))
 
 @app.command()
-def checkbalance(address: str):
-    print(f"Wallet Address: {asyncio.run(rest_client.account_balance(address))/pow(10, 8)} APT")
+def checkbalance():
+    print(f"Wallet Balance: {asyncio.run(rest_client.account_balance(me.address()))/pow(10, 8)} APT")
 
 if __name__ == '__main__':
     asyncio.run(app())
