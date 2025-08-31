@@ -36,7 +36,7 @@ const Trade = () => {
   const [askDepth, setAskDepth] = useState<Depth[]>([]);
   const [bidDepth, setBidDepth] = useState<Depth[]>([]);
   const moduleAddress =
-    "0xad0a42d57cf62e452cb0a672f426b85da806cdf51cddcb61a3ef33ce4ede67e2";
+    "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264";
 
   const fetchList = async () => {
     try {
@@ -53,10 +53,10 @@ const Trade = () => {
       const currBidMap: Depth[] = response.data.mktdpthbuyer.data;
       const currAskMap1: Depth[] = [];
       const currBidMap1: Depth[] = [];
-      for (let i = currBidMap.length-1; i >=0 ; i--) {
+      for (let i = currBidMap.length - 1; i >= 0; i--) {
         if (currBidMap[i].value != "0") currBidMap1.push(currBidMap[i]);
       }
-      for (let i = currAskMap.length-1; i >=0 ; i--) {
+      for (let i = currAskMap.length - 1; i >= 0; i--) {
         if (currAskMap[i].value != "0") currAskMap1.push(currAskMap[i]);
       }
 
@@ -135,7 +135,7 @@ const Trade = () => {
                     Positions
                   </button>
                   <button
-                    className={`flex justify-center items-center h-full w-full ${
+                    className={`flex justify-center items-center h-full w-full border-r-[0.5px] border-[#383C3F] ${
                       portfolio === 2 ? "bg-[#061323]" : ""
                     }`}
                     onClick={() => {
@@ -143,16 +143,6 @@ const Trade = () => {
                     }}
                   >
                     Orders
-                  </button>
-                  <button
-                    className={`flex justify-center items-center h-full w-full border-r-[0.5px] border-[#383C3F] ${
-                      portfolio === 3 ? "bg-[#061323]" : ""
-                    }`}
-                    onClick={() => {
-                      setPortfolio(3);
-                    }}
-                  >
-                    Filled
                   </button>
                 </div>
                 <button
@@ -171,7 +161,9 @@ const Trade = () => {
             </div>
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
-                {portfolio === 1 && <Positions></Positions>}
+                {portfolio === 1 && (
+                  <Positions seller={sellers} buyer={buyers}></Positions>
+                )}
                 {portfolio === 2 && (
                   <OpenOrders
                     currAsk={ask}
@@ -179,7 +171,6 @@ const Trade = () => {
                     ltp={ltp}
                   ></OpenOrders>
                 )}
-                {portfolio === 3 && <Filled></Filled>}
               </div>
             ) : (
               <></>
@@ -333,33 +324,16 @@ const Trade = () => {
                 >
                   Open Order
                 </button>
-                <button
-                  className={`px-2 py-1 rounded-xl ${
-                    bottomWindow === 3
-                      ? "bg-[#FFFFFF] bg-opacity-[10%] text-[#FFFFFF] text-opacity-[90%]"
-                      : "text-[#eaf0f6] text-opacity-[30%]"
-                  }`}
-                  onClick={() => {
-                    setBottomWindow(3);
-                  }}
-                >
-                  Order History
-                </button>
               </div>
               <div className="flex justify-center items-center h-[85%] w-full">
                 {bottomWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Positions></Positions>
+                    <Positions seller={sellers} buyer={buyers}></Positions>
                   </div>
                 )}
                 {bottomWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
                     <OpenOrders currAsk={ask} currBid={bid}></OpenOrders>
-                  </div>
-                )}
-                {bottomWindow === 3 && (
-                  <div className="flex justify-center items-center h-full w-full">
-                    <Filled></Filled>
                   </div>
                 )}
               </div>
