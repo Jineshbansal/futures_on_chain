@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Graph from "./Traderoute/Graph";
+import Chart from "./Traderoute/Chart.tsx";
 import CoinInformation from "./Traderoute/CoinInformation";
 import OrderBook from "./Traderoute/OrderBook";
 import RecentTrades from "./Traderoute/RecentTrades";
@@ -24,7 +24,18 @@ interface Depth {
   value: string;
 }
 
+interface Data {
+  value: number;
+  time: number;
+}
+
+const moduleAddress = import.meta.env.VITE_APP_FUTURES_MODULE_ADDRESS;
+const chartAddress = import.meta.env.VITE_APP_DEX_MODULE_ADDRESS;
+const apiUrl = `https://fullnode.devnet.aptoslabs.com/v1/accounts/${chartAddress}/events/${chartAddress}::dummycastdefi::OrderBook/set_ltp_event`;
+let lastSequenceNumber = "0";
+
 const Trade = () => {
+  console.log("Trade mounted");
   const provider = new Provider(Network.DEVNET);
 
   const [ask, setAsk] = useState<Order[]>([]);
@@ -34,9 +45,9 @@ const Trade = () => {
   const [ltp, setLtp] = useState<Order>();
   const [askDepth, setAskDepth] = useState<Depth[]>([]);
   const [bidDepth, setBidDepth] = useState<Depth[]>([]);
-  const moduleAddress = import.meta.env.VITE_APP_FUTURES_MODULE_ADDRESS;
-
-  const fetchList = async () => {
+  const [chartLtp, setChartLtp] = useState<Data>();
+ 
+  const fetchData = async () => {
     try {
       const response = await provider.getAccountResource(
         moduleAddress,
@@ -72,10 +83,29 @@ const Trade = () => {
     }
   };
 
+
+  const fetchltp = async () => {
+    try{
+      const response = await fetch(`${apiUrl}?limit=1`);
+      const data = await response.json();
+      lastSequenceNumber = (parseInt(data[data.length - 1].sequence_number) + 1).toString();
+      const newData: Data = {
+        value: parseFloat(data[data.length - 1].data.ltp),
+        time: Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000),
+      };
+      setChartLtp(newData);
+      console.log("outgoing", newData);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
-    fetchList();
+    fetchData();
+    fetchltp()
     setInterval(() => {
-      fetchList();
+      fetchData();
+      fetchltp();
     }, 1000);
   }, []);
 
@@ -99,22 +129,14 @@ const Trade = () => {
                 !fullScreen ? "row-start-1 row-end-4" : "row-start-1 row-end-7"
               } h-full w-full`}
             >
-              {!fullScreen && (
+
                 <div
-                  className={`flex justify-center items-center h-[88%]
+                  className={`flex justify-center items-center ${!fullScreen?'h-[88%]':'h-[94%]'}
             w-full`}
                 >
-                  <Graph></Graph>
+                  <Chart></Chart>
                 </div>
-              )}
-              {fullScreen && (
-                <div
-                  className={`flex justify-center items-center h-[94%]
-             w-full`}
-                >
-                  <Graph></Graph>
-                </div>
-              )}
+              
 
               <div
                 className={`flex justify-between items-center ${
@@ -275,7 +297,7 @@ const Trade = () => {
               <div className="flex justify-center items-center h-[90%] w-full">
                 {middleWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Graph></Graph>
+                    <Chart></Chart>
                   </div>
                 )}
                 {middleWindow === 2 && (
