@@ -24,12 +24,12 @@ const OrderBook = ({
 
   return (
     <div className="flex flex-col justify-between items-center h-full w-full border-b-[0.5px] border-[#383C3F]">
-      <div className="h-[10%] w-full flex justify-between items-center text-xs text-[#eaf0f6] text-opacity-[60%]">
+      <div className=" h-[10%] w-full flex justify-between items-center text-xs text-[#eaf0f6] z-20 text-opacity-[60%]">
         <div className="flex justify-center items-center h-full w-full">
-          Y-axis: price
+          <p>Y-axis: </p> <p className="font-bold">Price</p>
         </div>
         <div className="flex justify-center items-center h-full w-full">
-          X-axis: qty
+          <p>X-axis: </p> <p className="font-bold">Quantity</p>
         </div>
       </div>
 

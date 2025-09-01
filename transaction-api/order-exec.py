@@ -2,15 +2,15 @@ from aptos_sdk.account import Account
 from aptos_sdk.async_client import FaucetClient, RestClient, EntryFunction, TransactionPayload, Serializer, TransactionArgument
 import os
 import asyncio
-import random
 import typer
-import subprocess
 from rich import print as rprint
 import subprocess
 from dotenv import load_dotenv
 import os
 import cli_box
+import requests
 
+u
 load_dotenv()
 
 app = typer.Typer()
@@ -44,6 +44,14 @@ async def call_aptos_function(user ,module, function, type_args, args):
 contract_address = os.environ['MODULE_ADDRESS']
 private_key = os.environ['PRIVATE_KEY']
 me = Account.load_key(private_key)
+
+url = f'https://fullnode.devnet.aptoslabs.com/v1/accounts/{me.address()}/events/event_handle/field_name'
+
+headers = {"Accept": "application/json, application/x-bcs"}
+
+response = requests.get(url, headers=headers)
+
+print(response.json())
 
 async def exitAll():
     await call_aptos_function(me, "Orderbook", "Exit_all", [], [])

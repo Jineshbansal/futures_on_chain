@@ -108,7 +108,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     if (ind == 2 || ind == 3) args = [leverage, size];
 
     if (!account) return [];
-    const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
+    const moduleAddress = import.meta.env.VITE_APP_FUTURES_MODULE_ADDRESS;
 
     // console.log(leverage, parseFloat(size), price);
     const payload = {

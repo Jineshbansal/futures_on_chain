@@ -25,7 +25,7 @@ async def call_aptos_function(user ,module, function, type_args, args):
     await rest_client.wait_for_transaction(resp)
     return resp
 
-contract_address = "0xb7a5b4a0f26ff715ece64de80e88b6a45f1a2b08dbbfec590f7e8a6ce8c677e0"
+contract_address = "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264"
 me = Account.load_key("0xcd1eebe9cb95b6a646f9aa56a4552fbd48003aee698a328bd0725483a523ad7f")
 alice = Account.load_key("0x01b776e1cc438e7deb6baa2476d229ab762b9878493a178335430e2c41e175f6")
 bob = Account.load_key("0x91150901d0c52de47ec2b10f671347c25798d402c9b870bf36717ef7d5dcdac0")

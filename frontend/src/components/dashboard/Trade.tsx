@@ -7,7 +7,6 @@ import OrderWindow from "./Traderoute/OrderWindow";
 import AcountDetails from "./Traderoute/AccountDetails";
 import OpenOrders from "./Traderoute/OpenOrders";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
-import Filled from "./Traderoute/Filled";
 import Positions from "./Traderoute/Positions";
 import { Provider, Network } from "aptos";
 
@@ -35,8 +34,7 @@ const Trade = () => {
   const [ltp, setLtp] = useState<Order>();
   const [askDepth, setAskDepth] = useState<Depth[]>([]);
   const [bidDepth, setBidDepth] = useState<Depth[]>([]);
-  const moduleAddress =
-    "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264";
+  const moduleAddress = import.meta.env.VITE_APP_FUTURES_MODULE_ADDRESS;
 
   const fetchList = async () => {
     try {
@@ -90,7 +88,7 @@ const Trade = () => {
 
   return (
     <>
-      <div className="md:flex hidden justify-center items-center h-full bg-[#122337] text-white text-opacity-[90%]">
+      <div className="md:flex hidden justify-center items-center h-full gradient text-white text-opacity-[90%]">
         <div className="h-full w-full">
           <div className="h-[8%]">
             <CoinInformation></CoinInformation>

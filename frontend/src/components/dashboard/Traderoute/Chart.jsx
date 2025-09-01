@@ -8,7 +8,9 @@ export default function TradingViewWidget() {
 
   let limit = 100;
   let lastSequenceNumber = "0";
-  let url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}`;
+
+  let dexModule = import.meta.env.VITE_APP_DEX_MODULE_ADDRESS;
+  let url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/${dexModule}/events/${dexModule}::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}`;
   const options = { method: "GET", headers: { Accept: "application/json" } };
 
   const chartRef = useRef();
@@ -96,14 +98,14 @@ export default function TradingViewWidget() {
 
     limit = 10;
     setInterval(() => {
-      url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997/events/0xf3bad6f0e14ca8aa3724cba50a7ce50087ecfd1c307720534a2f00eff778f997::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`;
+      url = `https://fullnode.devnet.aptoslabs.com/v1/accounts/${dexModule}/events/${dexModule}::dummycastdefi::OrderBook/set_ltp_event?limit=${limit}&start=${lastSequenceNumber}`;
       fetch(url, options)
         .then((res) => res.json())
         .then((data) => {
           lastSequenceNumber = (
             parseInt(data[data.length - 1].sequence_number) + 1
           ).toString();
-          console.log(data[data.length - 1]);
+          console.log(data[data.length - 1], lastSequenceNumber + "ye last sequa");
           const currData = {
             value:
               parseFloat(data[data.length - 1].data.ltp) *
@@ -116,7 +118,7 @@ export default function TradingViewWidget() {
                   factor),
             time: Math.floor(Number(data[0].data.timestamp) / 1000000),
           };
-          console.log(currData);
+          console.log(currData, 'loda', lastSequenceNumber);
           areaSeries.update(currData);
         })
         .catch((err) => console.log(err));

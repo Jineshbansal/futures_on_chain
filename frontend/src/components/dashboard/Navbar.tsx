@@ -13,7 +13,7 @@ let Navbar: React.FC = () => {
 
   return (
     <>
-      <div className="md:flex justify-between items-center h-16 bg-[#122337] px-10 hidden">
+      <div className="md:flex justify-between items-center h-16 bg-[#0B1B2D] px-10 hidden">
         <div className="flex items-center justify-center">
           <div className="flex gap-3 justify-center items-center pr-3">
             <a>
@@ -55,7 +55,7 @@ let Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div className="md:hidden flex justify-between items-center h-16 w-full bg-[#122337] px-5">
+      <div className="md:hidden flex justify-between items-center h-16 w-full bg-[#0B1B2D] px-5">
         <div className="flex items-center h-full w-full justify-between">
           <div className="flex gap-3 justify-center items-center pr-3">
             <a>
