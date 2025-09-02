@@ -6,8 +6,8 @@ interface Data {
   time: number;
 }
 
-const chartAddress = import.meta.env.VITE_APP_DEX_MODULE_ADDRESS;
-const apiUrl = `https://fullnode.devnet.aptoslabs.com/v1/accounts/${chartAddress}/events/${chartAddress}::dummycastdefi::OrderBook/set_ltp_event`;
+const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
+const apiUrl = `https://fullnode.devnet.aptoslabs.com/v1/accounts/${moduleAddress}/events/${moduleAddress}::Orderbook::DexOrderBook/set_ltp_event`;
 var lastSequenceNumber = "";
 
 const Chart = () => {
