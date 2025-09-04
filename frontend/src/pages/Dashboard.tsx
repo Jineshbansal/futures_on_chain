@@ -1,9 +1,9 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
-import Navbar from "../components/dashboard/Navbar";
-import Trade from "../components/dashboard/Trade";
-import Markets from "../components/dashboard/Markets";
-import Portfolio from "../components/dashboard/Portfolio";
+import Navbar from "../components/Dashboard/Navbar";
+import Trade from "../components/Dashboard/Trade";
+import Markets from "../components/Dashboard/Markets";
+import Portfolio from "../components/Dashboard/Portfolio";
 
 const Dashboard: React.FC = () => {
   const location = useLocation();

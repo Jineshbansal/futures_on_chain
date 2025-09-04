@@ -6,11 +6,17 @@ interface Order {
   qty: string;
   stock_price: string;
   user_address: string;
-  pos?: boolean; 
+  pos?: boolean;
   timestamp: string;
 }
 
 const RecentTrades = ({ data }: { data: Order[] }) => {
+  const [recentTrades, setRecentTrades] = useState<Order[]>([]);
+
+  useEffect(() => {
+    setRecentTrades(data);
+  }, [data]);
+
   return (
     <>
       <div className="flex flex-col justify-center items-center h-full w-full border-b-[0.5px] border-[#383C3F]">
@@ -31,7 +37,7 @@ const RecentTrades = ({ data }: { data: Order[] }) => {
         >
           {/* <h2>Asks</h2> */}
           <div className="flex flex-col justify-end items-center w-full gap-1">
-            {data.map((order, index) => (
+            {recentTrades.map((order, index) => (
               <div
                 key={index}
                 className="flex justify-evenly items-center h-full w-full"
@@ -47,7 +53,9 @@ const RecentTrades = ({ data }: { data: Order[] }) => {
                   {order.qty}
                 </div>
                 <div className="flex justify-center items-center w-20">
-                  {new Date(Math.floor(parseFloat(order.timestamp)/1000)).toLocaleString()}
+                  {new Date(
+                    Math.floor(parseFloat(order.timestamp) / 1000)
+                  ).toLocaleString()}
                 </div>
               </div>
             ))}

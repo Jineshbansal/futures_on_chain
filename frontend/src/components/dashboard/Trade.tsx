@@ -45,7 +45,7 @@ const Trade = () => {
   const [askDepth, setAskDepth] = useState<Depth[]>([]);
   const [bidDepth, setBidDepth] = useState<Depth[]>([]);
   const [chartLtp, setChartLtp] = useState<Data>();
- 
+
   const fetchData = async () => {
     try {
       const response = await provider.getAccountResource(
@@ -82,26 +82,29 @@ const Trade = () => {
     }
   };
 
-
   const fetchltp = async () => {
-    try{
+    try {
       const response = await fetch(`${apiUrl}?limit=1`);
       const data = await response.json();
-      lastSequenceNumber = (parseInt(data[data.length - 1].sequence_number) + 1).toString();
+      lastSequenceNumber = (
+        parseInt(data[data.length - 1].sequence_number) + 1
+      ).toString();
       const newData: Data = {
         value: parseFloat(data[data.length - 1].data.ltp),
-        time: Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000),
+        time: Math.floor(
+          Number(data[data.length - 1].data.timestamp) / 1000000
+        ),
       };
       setChartLtp(newData);
       console.log("outgoing", newData);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchData();
-    fetchltp()
+    fetchltp();
     setInterval(() => {
       fetchData();
       fetchltp();
@@ -128,14 +131,14 @@ const Trade = () => {
                 !fullScreen ? "row-start-1 row-end-4" : "row-start-1 row-end-7"
               } h-full w-full`}
             >
-
-                <div
-                  className={`flex justify-center items-center ${!fullScreen?'h-[88%]':'h-[94%]'}
+              <div
+                className={`flex justify-center items-center ${
+                  !fullScreen ? "h-[88%]" : "h-[94%]"
+                }
             w-full`}
-                >
-                  <Chart></Chart>
-                </div>
-              
+              >
+                <Chart></Chart>
+              </div>
 
               <div
                 className={`flex justify-between items-center ${
@@ -227,9 +230,7 @@ const Trade = () => {
                   ></OrderBook>
                 )}
                 {!order && (
-                  <RecentTrades
-                    data={buyers.reverse().slice(0, 50)}
-                  ></RecentTrades>
+                  <RecentTrades data={buyers.slice(0, 50)}></RecentTrades>
                 )}
               </div>
             </div>
@@ -310,9 +311,7 @@ const Trade = () => {
                 )}
                 {middleWindow === 3 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <RecentTrades
-                      data={buyers.reverse().slice(0, 50)}
-                    ></RecentTrades>
+                    <RecentTrades data={buyers.slice(0, 50)}></RecentTrades>
                   </div>
                 )}
               </div>
