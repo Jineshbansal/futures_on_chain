@@ -35,7 +35,9 @@ const Chart = () => {
           precision: 3,
         },
         layout: {
-          background: "#131722",
+          background: {
+            color: "#051425"
+          },
           textColor: "#d1d4dd",
         },
         grid: {
@@ -52,7 +54,7 @@ const Chart = () => {
       const areaSeries = chart.addAreaSeries({
         topColor: "rgba(38,198,218, 0.56)",
         bottomColor: "rgba(38,198,218, 0.04)",
-        lineColor: "rgba(38,198,218, 1)",
+        lineColor: "rgba(38,198,218, 0.7)",
         lineWidth: 2,
       });
 
@@ -100,7 +102,7 @@ setInterval(() => {
   return (
     <>
       <div className="flex justify-center items-center h-full w-full md:border-r-[0.5px] md:border-l-[0.5px] md:border-[#383C3F] ">
-        <div ref={chartRef} className="h-full w-full"></div>
+        <div ref={chartRef} className="h-full w-full "></div>
       </div>{" "}
     </>
   );

@@ -73,8 +73,8 @@ const Trade = () => {
       setBuyers(currBuyers);
       setSellers(currSellers);
       setLtp(currBuyers.reverse()[0]);
-      setAskDepth(currAskMap1);
-      setBidDepth(currBidMap1);
+      setAskDepth(currAskMap1.reverse().slice(0,10).reverse());
+      setBidDepth(currBidMap1.slice(0,10));
       console.log(currAskMap1, currBidMap1, "aaja bhai");
       console.log(currAskMap, currBidMap, "aaja bhai 2");
     } catch (error) {
@@ -224,8 +224,8 @@ const Trade = () => {
               <div className="h-[92%]">
                 {order && (
                   <OrderBook
-                    asks={askDepth.slice(0, 10)}
-                    bids={bidDepth.slice(0, 10)}
+                    asks={askDepth}
+                    bids={bidDepth}
                     ltp={ltp}
                   ></OrderBook>
                 )}
@@ -303,8 +303,8 @@ const Trade = () => {
                 {middleWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
                     <OrderBook
-                      asks={askDepth.slice(0, 10)}
-                      bids={bidDepth.slice(0, 10)}
+                      asks={askDepth}
+                      bids={bidDepth}
                       ltp={ltp}
                     ></OrderBook>
                   </div>

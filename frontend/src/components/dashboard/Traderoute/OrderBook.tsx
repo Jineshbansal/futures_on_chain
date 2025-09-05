@@ -20,7 +20,7 @@ const OrderBook = ({
   bids: Depth[];
   ltp: Order;
 }) => {
-  console.log(ltp, "hi");
+  console.log(asks, bids, "hi");
 
   return (
     <div className="flex flex-col justify-between items-center h-full w-full border-b-[0.5px] border-[#383C3F]">

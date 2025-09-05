@@ -11,6 +11,7 @@ interface Order {
   pos?: boolean;
 }
 
+
 function specificUserTransaction(currArr: Order[], account: any) {
   const meraPta = String(account.address);
   console.log(currArr, 'loda lele')
@@ -32,6 +33,7 @@ function solve(userAsk: Order[], userBid: Order[]) {
       stock_price: userAsk[i].stock_price,
       timestamp: userAsk[i].timestamp,
       pos: false,
+      lvg: userAsk[i].lvg
     });
   }
   for (let i = 0; i < userBid.length; i++) {
@@ -41,6 +43,7 @@ function solve(userAsk: Order[], userBid: Order[]) {
       stock_price: userBid[i].stock_price,
       timestamp: userBid[i].timestamp,
       pos: true,
+      lvg: userBid[i].lvg
     });
   }
   return response.sort(
@@ -62,6 +65,31 @@ const OpenOrders = ({
         Please Connect your wallet!!
       </div>
     );
+
+    const provider = new Provider(Network.DEVNET);
+    
+    const executeOrder = async (timestamp, lvg, bid, qty, price) => {
+      if (!account) return [];
+      const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
+    
+      // console.log(leverage, parseFloat(size), price);
+      const payload = {
+        type: "entry_function_payload",
+        function: `${moduleAddress}::Orderbook::exitOrder`,
+        type_arguments: [],
+        arguments: [timestamp, lvg, bid, qty, price],
+      };
+      try {
+        const response = await (window as any).aptos.signAndSubmitTransaction(
+          payload
+        );
+        // // wait for transaction
+        console.log(payload);
+        await provider.waitForTransaction(response.hash);
+      } catch (error: any) {
+        console.log(error);
+      }
+    };
 
   const [openOrder, setOpenOrder] = useState<Order[]>([]);
 
@@ -92,6 +120,7 @@ const OpenOrders = ({
       "Are you sure you want to exit this trade?"
     );
     if (confirmed) {
+      executeOrder(openOrder[index].timestamp, openOrder[index].lvg, openOrder[index].pos, openOrder[index].qty, openOrder[index].stock_price);
       // Perform exit action here
       console.log("Exit:", openOrder[index]);
       setHoveringRow(null); // Reset the hovering state after exit

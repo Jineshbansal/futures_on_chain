@@ -314,12 +314,12 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                 <div
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={
-                    side === "buy"
+                    side === "Buy"
                       ? () => {
-                          executeOrder(leverage, size, price, 0);
+                          executeOrder(leverage, size, limitPrice, 0);
                         }
                       : () => {
-                          executeOrder(leverage, size, price, 1);
+                          executeOrder(leverage, size, limitPrice, 1);
                         }
                   }
                 >
@@ -439,7 +439,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                 <div
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={
-                    side === "buy"
+                    side === "Buy"
                       ? () => {
                           executeOrder(leverage, size, price, 2);
                         }

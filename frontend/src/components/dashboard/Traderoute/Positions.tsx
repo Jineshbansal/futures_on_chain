@@ -14,6 +14,7 @@ interface Data {
   time: number;
 }
 
+
 function specificUserTransaction(currArr: Order[], account: any) {
   const meraPta = String(account.address);
   console.log(currArr, 'loda lele')
@@ -35,6 +36,7 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
       stock_price: userAsk[i].stock_price,
       timestamp: userAsk[i].timestamp,
       pos: false,
+      lvg: userAsk[i].lvg
     });
   }
   for (let i = 0; i < userBid.length; i++) {
@@ -44,6 +46,7 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
       stock_price: userBid[i].stock_price,
       timestamp: userBid[i].timestamp,
       pos: true,
+      lvg: userBid[i].lvg
     });
   }
   return response.sort(
@@ -53,15 +56,42 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
 
 const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]; currLtp:Data }) => {
   const { account } = useWallet();
+  const provider = new Provider(Network.DEVNET);
+
+  const executeOrder = async (timestamp, lvg, buy, qty, price) => {
+    if (!account) return [];
+    const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
+  
+    // console.log(leverage, parseFloat(size), price);
+    const payload = {
+      type: "entry_function_payload",
+      function: `${moduleAddress}::Orderbook::exitPosition`,
+      type_arguments: [],
+      arguments: [timestamp, lvg, buy, qty, price],
+    };
+    try {
+      const response = await (window as any).aptos.signAndSubmitTransaction(
+        payload
+      );
+      // // wait for transaction
+      console.log(payload);
+      await provider.waitForTransaction(response.hash);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+  
   if (!account)
     return (
       <div className="flex justify-center items-center h-full w-full md:border-[0.5px] md:border-[#383C3F] p-5">
         Please Connect your wallet!!
       </div>
     );
+
   console.log("mera pta", account.address);
   const [filledOrders, setFilledOrder] = useState<Order[]>([]);
   const [ltp, setLtp] = useState<Data>();
+
   useEffect(() => {
     const userSells = specificUserTransaction(seller, account);
     const userBuys = specificUserTransaction(buyer, account);
@@ -80,13 +110,17 @@ const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]
   const handleMouseLeave = () => {
     setHoveringRow(null);
   };
+  
 
   const handleExitClick = (index: number) => {
     const confirmed = window.confirm(
       "Are you sure you want to exit the position?"
     );
     if (confirmed) {
+
+      console.log(filledOrders[index].timestamp, filledOrders[index].lvg, filledOrders[index].pos, filledOrders[index].qty, filledOrders[index].stock_price, 'this executed');
       // Perform exit action here
+      executeOrder(filledOrders[index].timestamp, filledOrders[index].lvg, filledOrders[index].pos, filledOrders[index].qty, filledOrders[index].stock_price);
       console.log("Exit:", filledOrders[index]);
       setHoveringRow(null); // Reset the hovering state after exit
     }

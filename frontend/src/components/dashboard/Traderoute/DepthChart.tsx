@@ -24,7 +24,7 @@ const DepthChart = ({
   const [chartInstance, setChartInstance] = useState<Chart<"bar"> | null>(null);
 
   useEffect(() => {
-    const quantities = data.map((item) => parseInt(item.value));
+    const quantities = data.map((item) => item.value);
     const labels = data.map((item) => item.key);
     console.log(quantities, "moye moye");
     if (chartInstance) {
@@ -85,7 +85,7 @@ const DepthChart = ({
           tooltip: {
             enabled: true,
             callbacks: {
-              label: (context) => `${context.label}: ${context.parsed.y}`, // Show price on top of the bars in tooltips
+              label: (context) => `${context.label}: ${context.parsed.x}`, // Show price on top of the bars in tooltips
             },
           },
         },
