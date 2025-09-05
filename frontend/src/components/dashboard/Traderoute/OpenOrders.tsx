@@ -13,9 +13,14 @@ interface Order {
 
 function specificUserTransaction(currArr: Order[], account: any) {
   const meraPta = String(account.address);
-  return currArr!.filter((val) => {
-    val.user_address === meraPta;
-  });
+  console.log(currArr, 'loda lele')
+  const tempData : Order[] = [];
+  for(let i=0;i<currArr.length;i++)
+  {
+    if(currArr[i].user_address==meraPta) tempData.push(currArr[i]);
+  }
+  console.log("aagya",tempData)
+  return tempData;
 }
 
 function solve(userAsk: Order[], userBid: Order[]) {
@@ -63,10 +68,12 @@ const OpenOrders = ({
   console.log("mera pta", account.address);
 
   useEffect(() => {
+    console.log(currAsk, currBid, 'dekhlo bhai mujhe me hu original')
     const userAsk = specificUserTransaction(currAsk, account);
     const userBid = specificUserTransaction(currBid, account);
+    console.log(userAsk, userBid, 'dekhlo bhai mujhe')
 
-    setOpenOrder(solve(currAsk, currBid));
+    setOpenOrder(solve(userAsk, userBid));
     console.log("openOrders", openOrder);
   }, [currAsk, currBid]);
 

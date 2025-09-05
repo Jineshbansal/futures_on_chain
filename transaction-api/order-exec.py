@@ -10,7 +10,6 @@ import os
 import cli_box
 import requests
 
-u
 load_dotenv()
 
 app = typer.Typer()
@@ -45,13 +44,6 @@ contract_address = os.environ['MODULE_ADDRESS']
 private_key = os.environ['PRIVATE_KEY']
 me = Account.load_key(private_key)
 
-url = f'https://fullnode.devnet.aptoslabs.com/v1/accounts/{me.address()}/events/event_handle/field_name'
-
-headers = {"Accept": "application/json, application/x-bcs"}
-
-response = requests.get(url, headers=headers)
-
-print(response.json())
 
 async def exitAll():
     await call_aptos_function(me, "Orderbook", "Exit_all", [], [])

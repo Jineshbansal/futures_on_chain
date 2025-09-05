@@ -184,7 +184,7 @@ const Trade = () => {
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
                 {portfolio === 1 && (
-                  <Positions seller={sellers} buyer={buyers}></Positions>
+                  <Positions seller={sellers} buyer={buyers} chartLtp={chartLtp}></Positions>
                 )}
                 {portfolio === 2 && (
                   <OpenOrders
@@ -346,7 +346,7 @@ const Trade = () => {
               <div className="flex justify-center items-center h-[85%] w-full">
                 {bottomWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Positions seller={sellers} buyer={buyers}></Positions>
+                    <Positions seller={sellers} buyer={buyers} chartLtp={chartLtp}></Positions>
                   </div>
                 )}
                 {bottomWindow === 2 && (

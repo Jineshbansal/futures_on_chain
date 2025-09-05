@@ -9,12 +9,21 @@ interface Order {
   timestamp: string;
   pos?: boolean;
 }
+interface Data {
+  value: number;
+  time: number;
+}
 
 function specificUserTransaction(currArr: Order[], account: any) {
   const meraPta = String(account.address);
-  return currArr!.filter((val) => {
-    val.user_address === meraPta;
-  });
+  console.log(currArr, 'loda lele')
+  const tempData : Order[] = [];
+  for(let i=0;i<currArr.length;i++)
+  {
+    if(currArr[i].user_address==meraPta) tempData.push(currArr[i]);
+  }
+  console.log("aagya",tempData)
+  return tempData;
 }
 
 function solve(userAsk: Order[], userBid: Order[]): Order[] {
@@ -42,7 +51,7 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
   );
 }
 
-const Positions = ({ seller, buyer }: { seller: Order[]; buyer: Order[] }) => {
+const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]; currLtp:Data }) => {
   const { account } = useWallet();
   if (!account)
     return (
@@ -51,12 +60,14 @@ const Positions = ({ seller, buyer }: { seller: Order[]; buyer: Order[] }) => {
       </div>
     );
   console.log("mera pta", account.address);
-
   const [filledOrders, setFilledOrder] = useState<Order[]>([]);
+  const [ltp, setLtp] = useState<Data>();
   useEffect(() => {
     const userSells = specificUserTransaction(seller, account);
     const userBuys = specificUserTransaction(buyer, account);
-    setFilledOrder(solve(seller, buyer));
+    console.log(currLtp,"aaja bhai");
+    setFilledOrder(solve(userSells, userBuys));
+    setLtp(currLtp);
     console.log("filledOrders", filledOrders);
   }, [seller, buyer]);
 
@@ -129,7 +140,8 @@ const Positions = ({ seller, buyer }: { seller: Order[]; buyer: Order[] }) => {
                       Math.floor(parseFloat(item.timestamp) / 1000)
                     ).toLocaleString()}
                   </td>
-                  <td></td>
+                  <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-left">
+                  </td>
                   <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-center">
                     <button
                       className="h-full w-full bg-slate-600 rounded"
