@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaAngleDown } from "react-icons/fa";
 import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
+import { IoMdCloseCircle } from "react-icons/io";
 
 interface OrderWindowProps {
   tradeWindow: boolean;
@@ -21,12 +22,13 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   setTradeWindow: _setTradeWindow,
 }) => {
   const [limit, setLimit] = useState(true);
-  const [stopLoss, setStopLoss] = useState(false);
+  const [openStopLoss, setOpenStopLoss] = useState(false);
   const [side, setSide] = useState("Buy");
 
   const [limitPrice, setLimitPrice] = useState(0.0);
   const [price, setPrice] = useState(0.0);
   const [size, setSize] = useState(0.0);
+  const [stopLoss, setStopLoss] = useState(0.0);
 
   const [leverage, setLeverage] = useState(1);
 
@@ -44,6 +46,16 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
       setLimitPrice(inputValue);
       setSize(0.0);
       setPrice(0.0);
+    }
+  };
+  const handleStopLoss = (e) => {
+    const inputValue = e.target.value;
+
+    // Allow only positive numbers
+    const isValid = /^\d*\.?\d*$/.test(inputValue);
+
+    if (isValid) {
+      setStopLoss(inputValue);
     }
   };
 
@@ -163,9 +175,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
               setLimit(true);
               setSide("Buy");
               setLimitPrice(0);
+              setStopLoss(0);
               setPrice(0);
               setSize(0);
               setLeverage(1);
+              setOpenStopLoss(false);
             }}
           >
             Limit
@@ -178,9 +192,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
               setLimit(false);
               setSide("Buy");
               setLimitPrice(0);
+              setStopLoss(0);
               setPrice(0);
               setSize(0);
               setLeverage(1);
+              setOpenStopLoss(false);
             }}
           >
             Market
@@ -200,9 +216,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     onClick={() => {
                       setSide("Buy");
                       setLimitPrice(0);
+                      setStopLoss(0);
                       setPrice(0);
                       setSize(0);
                       setLeverage(1);
+                      setOpenStopLoss(false);
                     }}
                   >
                     Buy
@@ -216,9 +234,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     onClick={() => {
                       setSide("Sell");
                       setLimitPrice(0);
+                      setStopLoss(0);
                       setPrice(0);
                       setSize(0);
                       setLeverage(1);
+                      setOpenStopLoss(false);
                     }}
                   >
                     Sell
@@ -239,19 +259,37 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         onChange={handleLimitPrice}
                       ></input>
                     </div>
-                    {stopLoss && (
-                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                    {openStopLoss && (
+                      <div className="relative flex flex-col justify-center items-start w-full h-full rounded-xl">
                         <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
                           Stop Loss
                         </div>
+                        <button
+                          className="absolute top-0 right-0"
+                          onClick={() => {
+                            setOpenStopLoss(false);
+                          }}
+                        >
+                          <IoMdCloseCircle />
+                        </button>
                         <input
                           className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
                           placeholder="0.00"
                           type="text"
-                          value={limitPrice ? limitPrice : ""}
-                          onChange={handleLimitPrice}
+                          value={stopLoss ? stopLoss : ""}
+                          onChange={handleStopLoss}
                         ></input>
                       </div>
+                    )}
+                    {!openStopLoss && (
+                      <button
+                        className="text-[#eaf0f6] text-opacity-[60%] text-xs"
+                        onClick={() => {
+                          setOpenStopLoss(true);
+                        }}
+                      >
+                        Add Stoploss
+                      </button>
                     )}
                   </div>
                   <div className="flex justify-center items-center gap-2">
@@ -355,9 +393,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     onClick={() => {
                       setSide("Buy");
                       setLimitPrice(0);
+                      setStopLoss(0);
                       setPrice(0);
                       setSize(0);
                       setLeverage(1);
+                      setOpenStopLoss(false);
                     }}
                   >
                     Buy
@@ -371,9 +411,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                     onClick={() => {
                       setSide("Sell");
                       setLimitPrice(0);
+                      setStopLoss(0);
                       setPrice(0);
                       setSize(0);
                       setLeverage(1);
+                      setOpenStopLoss(false);
                     }}
                   >
                     Sell
@@ -394,6 +436,38 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         onChange={handleSize}
                       ></input>
                     </div>
+                    {openStopLoss && (
+                      <div className="relative flex flex-col justify-center items-start w-full h-full rounded-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                          Stop Loss
+                        </div>
+                        <button
+                          className="absolute top-0 right-0"
+                          onClick={() => {
+                            setOpenStopLoss(false);
+                          }}
+                        >
+                          <IoMdCloseCircle />
+                        </button>
+                        <input
+                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                          placeholder="0.00"
+                          type="text"
+                          value={stopLoss ? stopLoss : ""}
+                          onChange={handleStopLoss}
+                        ></input>
+                      </div>
+                    )}
+                    {!openStopLoss && (
+                      <button
+                        className="text-[#eaf0f6] text-opacity-[60%] text-xs"
+                        onClick={() => {
+                          setOpenStopLoss(true);
+                        }}
+                      >
+                        Add Stoploss
+                      </button>
+                    )}
                   </div>
                   <div className="flex flex-col justify-center items-center w-full gap-7">
                     <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
