@@ -21,6 +21,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   setTradeWindow: _setTradeWindow,
 }) => {
   const [limit, setLimit] = useState(true);
+  const [stopLoss, setStopLoss] = useState(false);
   const [side, setSide] = useState("Buy");
 
   const [limitPrice, setLimitPrice] = useState(0.0);
@@ -188,7 +189,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
         <div className="flex justify-center items-center h-full w-full">
           {limit ? (
             <form className="flex flex-col justify-between items-center  h-full w-full">
-              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full">
+              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full overflow-auto">
                 <div className="flex justify-center items-center h-10 w-[60%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
                   <div
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
@@ -238,6 +239,20 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         onChange={handleLimitPrice}
                       ></input>
                     </div>
+                    {stopLoss && (
+                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                          Stop Loss
+                        </div>
+                        <input
+                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                          placeholder="0.00"
+                          type="text"
+                          value={limitPrice ? limitPrice : ""}
+                          onChange={handleLimitPrice}
+                        ></input>
+                      </div>
+                    )}
                   </div>
                   <div className="flex justify-center items-center gap-2">
                     <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
@@ -329,7 +344,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
             </form>
           ) : (
             <form className="flex flex-col justify-between items-center  h-full w-full">
-              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full">
+              <div className="flex flex-col justify-between items-center pt-3 gap-5 w-full overflow-auto">
                 <div className="flex justify-center items-center h-10 w-[60%] bg-[#FFFFFF] bg-opacity-[8%] rounded-xl">
                   <div
                     className={`flex justify-center items-center w-[50%] h-full rounded-xl ${
@@ -380,18 +395,20 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                       ></input>
                     </div>
                   </div>
-                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
-                    <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                      <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
-                        Price
+                  <div className="flex flex-col justify-center items-center w-full gap-7">
+                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
+                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                          Price
+                        </div>
+                        <input
+                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                          placeholder="0.00"
+                          type="text"
+                          value={price ? price : ""}
+                          onChange={handlePrice}
+                        ></input>
                       </div>
-                      <input
-                        className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                        placeholder="0.00"
-                        type="text"
-                        value={price ? price : ""}
-                        onChange={handlePrice}
-                      ></input>
                     </div>
                   </div>
                 </div>
@@ -417,7 +434,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center gap-3 w-[80%]">
+              <div className="absolute bottom-0 flex flex-col justify-center items-center gap-3 w-[80%]">
                 <div className="w-[70%] text-xs">
                   <div className="flex justify-between items-center">
                     <div>Expected Price</div>

@@ -4,7 +4,7 @@ import CoinInformation from "./Traderoute/CoinInformation";
 import OrderBook from "./Traderoute/OrderBook";
 import RecentTrades from "./Traderoute/RecentTrades";
 import OrderWindow from "./Traderoute/OrderWindow";
-import AcountDetails from "./Traderoute/AccountDetails";
+import AcountDetails from "./Traderoute/MariginCall.tsx";
 import OpenOrders from "./Traderoute/OpenOrders";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import Positions from "./Traderoute/Positions";
@@ -73,8 +73,8 @@ const Trade = () => {
       setBuyers(currBuyers);
       setSellers(currSellers);
       setLtp(currBuyers.reverse()[0]);
-      setAskDepth(currAskMap1.reverse().slice(0,10).reverse());
-      setBidDepth(currBidMap1.slice(0,10));
+      setAskDepth(currAskMap1.reverse().slice(0, 10).reverse());
+      setBidDepth(currBidMap1.slice(0, 10));
       console.log(currAskMap1, currBidMap1, "aaja bhai");
       console.log(currAskMap, currBidMap, "aaja bhai 2");
     } catch (error) {
@@ -184,7 +184,11 @@ const Trade = () => {
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
                 {portfolio === 1 && (
-                  <Positions seller={sellers} buyer={buyers} chartLtp={chartLtp}></Positions>
+                  <Positions
+                    seller={sellers}
+                    buyer={buyers}
+                    chartLtp={chartLtp}
+                  ></Positions>
                 )}
                 {portfolio === 2 && (
                   <OpenOrders
@@ -342,16 +346,37 @@ const Trade = () => {
                 >
                   Open Order
                 </button>
+                <button
+                  className={`px-2 py-1 rounded-xl ${
+                    bottomWindow === 3
+                      ? "bg-[#FFFFFF] bg-opacity-[10%] text-[#FFFFFF] text-opacity-[90%]"
+                      : "text-[#eaf0f6] text-opacity-[30%]"
+                  }`}
+                  onClick={() => {
+                    setBottomWindow(3);
+                  }}
+                >
+                  Marigin Call
+                </button>
               </div>
               <div className="flex justify-center items-center h-[85%] w-full">
                 {bottomWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Positions seller={sellers} buyer={buyers} chartLtp={chartLtp}></Positions>
+                    <Positions
+                      seller={sellers}
+                      buyer={buyers}
+                      chartLtp={chartLtp}
+                    ></Positions>
                   </div>
                 )}
                 {bottomWindow === 2 && (
                   <div className="flex justify-center items-center h-full w-full">
                     <OpenOrders currAsk={ask} currBid={bid}></OpenOrders>
+                  </div>
+                )}
+                {bottomWindow === 3 && (
+                  <div className="flex justify-center items-center h-full w-full">
+                    <AcountDetails></AcountDetails>
                   </div>
                 )}
               </div>
