@@ -67,7 +67,7 @@ async def exitOrder(timestamp, lvg, bid, qty, price):
     await call_aptos_function(me, "Orderbook", "exitOrder", [], [TransactionArgument(timestamp, Serializer.u64), TransactionArgument(lvg, Serializer.u64), TransactionArgument(bid, Serializer.bool), TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)]);
 
 async def exitPos(timestamp, lvg, buy, qty, price):
-    await call_aptos_function(me, "Orderbook", "exitOrder", [], [TransactionArgument(timestamp, Serializer.u64), TransactionArgument(lvg, Serializer.u64), TransactionArgument(buy, Serializer.bool), TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)]);
+    await call_aptos_function(me, "Orderbook", "exitPosition", [], [TransactionArgument(timestamp, Serializer.u64), TransactionArgument(lvg, Serializer.u64), TransactionArgument(buy, Serializer.bool), TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64)]);
 
 ##################################################
 @app.command()
