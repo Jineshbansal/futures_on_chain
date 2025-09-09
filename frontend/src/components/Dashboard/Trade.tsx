@@ -91,11 +91,17 @@ const Trade = () => {
       const data = await response.json();
       const assetData: Data = {
         value: parseFloat(data[data.length - 1].data.ltp),
-        time: Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000),
+        time: Math.floor(
+          Number(data[data.length - 1].data.timestamp) / 1000000
+        ),
       };
       const futuresData: Data = {
-        value: assetData.value * ( 1 + (rfactor * (expiryTime - assetData.time)/(24*3600))),
-        time: Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000),
+        value:
+          assetData.value *
+          (1 + (rfactor * (expiryTime - assetData.time)) / (24 * 3600)),
+        time: Math.floor(
+          Number(data[data.length - 1].data.timestamp) / 1000000
+        ),
       };
       setAssetLtp(assetData);
       setFuturesLtp(futuresData);
@@ -126,7 +132,10 @@ const Trade = () => {
       <div className="md:flex hidden justify-center items-center h-full gradient text-white text-opacity-[90%]">
         <div className="h-full w-full">
           <div className="h-[8%]">
-            <CoinInformation assetLtp={assetLtp} futuresLtp={futuresLtp}></CoinInformation>
+            <CoinInformation
+              assetLtp={assetLtp}
+              futuresLtp={futuresLtp}
+            ></CoinInformation>
           </div>
           <div className="grid grid-cols-12 grid-rows-6 h-[92%]">
             <div
@@ -140,7 +149,11 @@ const Trade = () => {
                 }
             w-full`}
               >
-                <Chart rfactor={rfactor} expiryTime={expiryTime} apiUrl={apiUrl}></Chart>
+                <Chart
+                  rfactor={rfactor}
+                  expiryTime={expiryTime}
+                  apiUrl={apiUrl}
+                ></Chart>
               </div>
 
               <div
@@ -187,7 +200,11 @@ const Trade = () => {
             {!fullScreen ? (
               <div className="col-start-1 col-end-8 row-start-4 row-end-7">
                 {portfolio === 1 && (
-                  <Positions seller={sellers} buyer={buyers} chartLtp={assetLtp}></Positions>
+                  <Positions
+                    seller={sellers}
+                    buyer={buyers}
+                    chartLtp={assetLtp}
+                  ></Positions>
                 )}
                 {portfolio === 2 && (
                   <OpenOrders
@@ -244,6 +261,7 @@ const Trade = () => {
               <OrderWindow
                 tradeWindow={tradeWindow}
                 setTradeWindow={setTradeWindow}
+                futuresLtp={futuresLtp}
               ></OrderWindow>
             </div>
           </div>
@@ -254,7 +272,10 @@ const Trade = () => {
         {!tradeWindow && (
           <div className="flex flex-col justify-center items-center h-[94.5%] w-full">
             <div className="h-[20%] w-full">
-              <CoinInformation assetLtp = {assetLtp} futuresLtp={futuresLtp}></CoinInformation>
+              <CoinInformation
+                assetLtp={assetLtp}
+                futuresLtp={futuresLtp}
+              ></CoinInformation>
             </div>
             <div className="h-[45%] w-full">
               <div className="flex justify-start items-center gap-2 h-[10%] w-full px-3">
@@ -300,7 +321,11 @@ const Trade = () => {
               <div className="flex justify-center items-center h-[90%] w-full">
                 {middleWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Chart rfactor={rfactor} expiryTime={expiryTime} apiUrl={apiUrl}></Chart>
+                    <Chart
+                      rfactor={rfactor}
+                      expiryTime={expiryTime}
+                      apiUrl={apiUrl}
+                    ></Chart>
                   </div>
                 )}
                 {middleWindow === 2 && (
@@ -361,7 +386,11 @@ const Trade = () => {
               <div className="flex justify-center items-center h-[85%] w-full">
                 {bottomWindow === 1 && (
                   <div className="flex justify-center items-center h-full w-full">
-                    <Positions seller={sellers} buyer={buyers} chartLtp={assetLtp}></Positions>
+                    <Positions
+                      seller={sellers}
+                      buyer={buyers}
+                      chartLtp={assetLtp}
+                    ></Positions>
                   </div>
                 )}
                 {bottomWindow === 2 && (
@@ -397,6 +426,7 @@ const Trade = () => {
           <OrderWindow
             tradeWindow={tradeWindow}
             setTradeWindow={setTradeWindow}
+            futuresLtp={futuresLtp}
           ></OrderWindow>
         )}
       </div>

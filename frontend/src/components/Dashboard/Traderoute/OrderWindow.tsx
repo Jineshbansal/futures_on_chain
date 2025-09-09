@@ -4,9 +4,15 @@ import { Provider, Network } from "aptos";
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { IoMdCloseCircle } from "react-icons/io";
 
+interface Data {
+  value: number;
+  time: number;
+}
+
 interface OrderWindowProps {
   tradeWindow: boolean;
   setTradeWindow: React.Dispatch<React.SetStateAction<boolean>>;
+  futuresLtp: Data;
 }
 
 // function to execute order
@@ -20,6 +26,7 @@ const param = [
 const OrderWindow: React.FC<OrderWindowProps> = ({
   tradeWindow,
   setTradeWindow: _setTradeWindow,
+  futuresLtp,
 }) => {
   const [limit, setLimit] = useState(true);
   const [openStopLoss, setOpenStopLoss] = useState(false);
@@ -49,6 +56,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     }
   };
   const handleStopLoss = (e) => {
+    e.preventDefault();
     const inputValue = e.target.value;
 
     // Allow only positive numbers
@@ -60,6 +68,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   };
 
   const handleSize = (e) => {
+    e.preventDefault();
     const inputValue = e.target.value;
     // Allow only positive numbers
     const isValid = /^\d*\.?\d*$/.test(inputValue);
@@ -72,9 +81,11 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     } else {
       //Market ltd from reccent trades set price to ltd*size
     }
+    e.prevent.prev;
   };
 
   const handlePrice = (e) => {
+    e.preventDefault();
     const inputValue = e.target.value;
 
     // Allow only positive numbers
@@ -267,6 +278,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         <button
                           className="absolute top-0 right-0"
                           onClick={() => {
+                            setStopLoss(0.0);
                             setOpenStopLoss(false);
                           }}
                         >
@@ -444,6 +456,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         <button
                           className="absolute top-0 right-0"
                           onClick={() => {
+                            setStopLoss(0.0);
                             setOpenStopLoss(false);
                           }}
                         >
