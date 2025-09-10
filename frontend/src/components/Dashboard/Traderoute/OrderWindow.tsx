@@ -126,15 +126,25 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   const provider = new Provider(Network.DEVNET);
   const { account } = useWallet();
 
-  const executeOrder = async (leverage, size, price, ind) => {
+  const executeOrder = async (leverage, size, price, ind, stoploss) => {
+    if(!stoploss) {
+      if(ind==0 || ind ==2) stoploss = 0;
+      else stoploss = Number.MAX_SAFE_INTEGER;
+    } else if(ind == 0 || ind == 2) {
+      if(stoploss>price) stoploss=0
+    }  else if(ind == 1 || ind == 3) {
+      if(stoploss<price) stoploss = Number.MAX_SAFE_INTEGER;
+    }
+
     size = parseFloat(size);
-    let args = [leverage, size, price];
-    if (ind == 2 || ind == 3) args = [leverage, size];
+
+    let args = [leverage, size, price, stoploss];
+    if (ind == 2 || ind == 3) args = [leverage, size, stoploss];
 
     if (!account) return [];
     const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
 
-    // console.log(leverage, parseFloat(size), price);
+    console.log(leverage, parseFloat(size), price, stoploss, 'args');
     const payload = {
       type: "entry_function_payload",
       function: `${moduleAddress}::Orderbook::${param[ind]}`,
@@ -381,10 +391,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   onClick={
                     side === "Buy"
                       ? () => {
-                          executeOrder(leverage, size, limitPrice, 0);
+                          executeOrder(leverage, size, limitPrice, 0, stopLoss);
                         }
                       : () => {
-                          executeOrder(leverage, size, limitPrice, 1);
+                          executeOrder(leverage, size, limitPrice, 1, stopLoss);
                         }
                   }
                 >
@@ -545,10 +555,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   onClick={
                     side === "Buy"
                       ? () => {
-                          executeOrder(leverage, size, price, 2);
+                          executeOrder(leverage, size, price, 2, stopLoss);
                         }
                       : () => {
-                          executeOrder(leverage, size, price, 3);
+                          executeOrder(leverage, size, price, 3, stopLoss);
                         }
                   }
                 >

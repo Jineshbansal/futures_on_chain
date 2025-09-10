@@ -117,7 +117,7 @@ const Trade = () => {
     setInterval(() => {
       fetchData();
       fetchltp();
-    }, 1000);
+    }, 500);
   }, []);
 
   const [order, setOrder] = useState(true);
