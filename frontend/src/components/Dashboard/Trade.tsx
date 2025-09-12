@@ -203,7 +203,7 @@ const Trade = () => {
                   <Positions
                     seller={sellers}
                     buyer={buyers}
-                    chartLtp={assetLtp}
+                    futuresLtp={futuresLtp}
                   ></Positions>
                 )}
                 {portfolio === 2 && (
@@ -389,7 +389,7 @@ const Trade = () => {
                     <Positions
                       seller={sellers}
                       buyer={buyers}
-                      chartLtp={assetLtp}
+                      futuresLtp={futuresLtp}
                     ></Positions>
                   </div>
                 )}

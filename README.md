@@ -1,6 +1,6 @@
 # Futures on Chain
 
-Futures on Chain is a decentralized futures trading platform built on top of the Aptos Blockchain. It has both a DEX (Decentralized Exchange) and a Futures Trading Platform built into it. The repository consists of a Frontend Website to interact with the contract using the browser wallet Petra, a python CLI program for interacting with the contract and 2 public API for fetching real time data and order placing.
+Futures on Chain is a decentralized futures trading platform built on top of the Aptos Blockchain. It has both a DEX (Decentralized Exchange) for the underlying commodity and a Futures Trading Platform built into it. The repository consists of a Frontend Website to interact with the contract using the browser wallet, two APIs for real time market data and order placing.
 
 ## Table of Contents
 
@@ -77,5 +77,5 @@ Further details about CLI can be found [here](transaction-api/README.md)
 
 ## Implementation Details
 
-Insert image here of architecture
+![App Architecture](images/app_arch.png)
 

@@ -1,6 +1,7 @@
 import { useWallet } from "@aptos-labs/wallet-adapter-react";
 import { Network, Provider } from "aptos";
 import { useState, useEffect } from "react";
+import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 interface Order {
   lvg?: string;
   qty: string;
@@ -14,16 +15,14 @@ interface Data {
   time: number;
 }
 
-
 function specificUserTransaction(currArr: Order[], account: any) {
   const meraPta = String(account.address);
-  console.log(currArr, 'loda lele')
-  const tempData : Order[] = [];
-  for(let i=0;i<currArr.length;i++)
-  {
-    if(currArr[i].user_address==meraPta) tempData.push(currArr[i]);
+  console.log(currArr, "loda lele");
+  const tempData: Order[] = [];
+  for (let i = 0; i < currArr.length; i++) {
+    if (currArr[i].user_address == meraPta) tempData.push(currArr[i]);
   }
-  console.log("aagya",tempData)
+  console.log("aagya", tempData);
   return tempData;
 }
 
@@ -36,7 +35,7 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
       stock_price: userAsk[i].stock_price,
       timestamp: userAsk[i].timestamp,
       pos: false,
-      lvg: userAsk[i].lvg
+      lvg: userAsk[i].lvg,
     });
   }
   for (let i = 0; i < userBid.length; i++) {
@@ -46,7 +45,7 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
       stock_price: userBid[i].stock_price,
       timestamp: userBid[i].timestamp,
       pos: true,
-      lvg: userBid[i].lvg
+      lvg: userBid[i].lvg,
     });
   }
   return response.sort(
@@ -54,14 +53,22 @@ function solve(userAsk: Order[], userBid: Order[]): Order[] {
   );
 }
 
-const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]; currLtp:Data }) => {
+const Positions = ({
+  seller,
+  buyer,
+  futuresLtp,
+}: {
+  seller: Order[];
+  buyer: Order[];
+  futuresLtp: Data;
+}) => {
   const { account } = useWallet();
   const provider = new Provider(Network.DEVNET);
 
   const executeOrder = async (timestamp, lvg, buy, qty, price) => {
     if (!account) return [];
     const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
-  
+
     // console.log(leverage, parseFloat(size), price);
     const payload = {
       type: "entry_function_payload",
@@ -80,7 +87,7 @@ const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]
       console.log(error);
     }
   };
-  
+
   if (!account)
     return (
       <div className="flex justify-center items-center h-full w-full md:border-[0.5px] md:border-[#383C3F] p-5">
@@ -90,14 +97,13 @@ const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]
 
   console.log("mera pta", account.address);
   const [filledOrders, setFilledOrder] = useState<Order[]>([]);
-  const [ltp, setLtp] = useState<Data>();
 
   useEffect(() => {
     const userSells = specificUserTransaction(seller, account);
     const userBuys = specificUserTransaction(buyer, account);
-    console.log(currLtp,"aaja bhai");
-    setFilledOrder(solve(userSells, userBuys));
-    setLtp(currLtp);
+
+    setFilledOrder(solve(userSells,userBuys));
+
     console.log("filledOrders", filledOrders);
   }, [seller, buyer]);
 
@@ -110,22 +116,38 @@ const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]
   const handleMouseLeave = () => {
     setHoveringRow(null);
   };
-  
 
   const handleExitClick = (index: number) => {
     const confirmed = window.confirm(
       "Are you sure you want to exit the position?"
     );
     if (confirmed) {
-
-      console.log(filledOrders[index].timestamp, filledOrders[index].lvg, filledOrders[index].pos, filledOrders[index].qty, filledOrders[index].stock_price, 'this executed');
+      console.log(
+        filledOrders[index].timestamp,
+        filledOrders[index].lvg,
+        filledOrders[index].pos,
+        filledOrders[index].qty,
+        filledOrders[index].stock_price,
+        "this executed"
+      );
       // Perform exit action here
-      executeOrder(filledOrders[index].timestamp, filledOrders[index].lvg, filledOrders[index].pos, filledOrders[index].qty, filledOrders[index].stock_price);
+      executeOrder(
+        filledOrders[index].timestamp,
+        filledOrders[index].lvg,
+        filledOrders[index].pos,
+        filledOrders[index].qty,
+        filledOrders[index].stock_price
+      );
       console.log("Exit:", filledOrders[index]);
       setHoveringRow(null); // Reset the hovering state after exit
     }
   };
+  const colors = ["red", "green"];
 
+  const symbols = [
+    <MdArrowDropDown className="text-red-500" />,
+    <MdArrowDropUp className="text-green-500" />,
+  ];
   return (
     <>
       <div className="flex justify-center items-center h-full w-full md:border-[0.5px] md:border-[#383C3F] p-5">
@@ -174,7 +196,30 @@ const Positions = ({ seller, buyer, currLtp }: { seller: Order[]; buyer: Order[]
                       Math.floor(parseFloat(item.timestamp) / 1000)
                     ).toLocaleString()}
                   </td>
-                  <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-left">
+                  <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-left flex flex-row">
+                    {item.pos ? (
+                      <div className="flex">
+                        <div className="text-2xl">{symbols[1]}</div>
+                        <p className="text-green-500">
+                          {(
+                            (futuresLtp.value - parseFloat(item.stock_price)) *
+                            parseFloat(item.qty) *
+                            parseFloat(item.lvg)
+                          ).toFixed(2)}
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="flex">
+                        <div className="text-2xl">{symbols[0]}</div>
+                        <p className="text-red-500">
+                          {(
+                            (-parseFloat(item.stock_price) + futuresLtp.value) *
+                            parseFloat(item.qty) *
+                            parseFloat(item.lvg)
+                          ).toFixed(2)}
+                        </p>
+                      </div>
+                    )}
                   </td>
                   <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-center">
                     <button
