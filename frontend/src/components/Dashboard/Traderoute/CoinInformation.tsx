@@ -1,7 +1,9 @@
 import React from "react";
 import logo from "../../../assets/logo-white.svg";
 import { useEffect, useState } from "react";
-import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
+import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowDropUp } from "react-icons/md";
+import { WalletSelector } from "@aptos-labs/wallet-adapter-ant-design";
 
 interface Data {
   value: number;
@@ -12,7 +14,7 @@ const CoinInformation = ({
   assetLtp,
   futuresLtp,
 }: {
-  charLtp: Data;
+  assetLtp: Data;
   futuresLtp: Data;
 }) => {
   const [prev, setPrev] = useState(0);
@@ -35,43 +37,159 @@ const CoinInformation = ({
   }, [assetLtp]);
 
   return (
-    <div className="flex flex-row px-8 items-center h-full w-full border-[0.5px] border-[#383C3F]">
-      <div className="flex justify-start item-center w-full h-full">
+    <>
+      <div className="md:flex hidden flex-row px-8 justify-between items-center h-full w-full border-[0.5px] border-[#383C3F]">
+        <div className="flex gap-12 justify-start item-center w-full h-full">
+          <div className="flex flex-row justify-start item-center basis-1/6 items-center">
+            <div className="basis-1/8 h-full lg:p-2">
+              <img className="h-full" src={logo}></img>
+            </div>
+            <div className="px-2 font-bold basis-1/8">Sharky/APT</div>
+          </div>
+          <div className="flex flex-col justify-center item-center basis-1/6 text-left">
+            <div className="flex">
+              <div className="w-4">{symbols[color]}</div>
+              <div>
+                <div
+                  className={`font-bold basis-1/8 text-${colors[color]}-500`}
+                >
+                  {assetLtp?.value}
+                </div>
+                <div className="basis-1/8">Asset Price</div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center item-center basis-1/6 text-left">
+            <div className="flex">
+              <div className="w-4">{symbols[color]}</div>
+              <div>
+                <div
+                  className={`font-bold  basis-1/8 text-${colors[color]}-500`}
+                >
+                  {futuresLtp?.value}
+                </div>
+                <div className="basis-1/8">Futures Price</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Dropdown></Dropdown>
+      </div>
+
+      <div className="flex md:hidden justify-between item-center w-full h-full p-4">
         <div className="flex flex-row justify-start item-center basis-1/6 items-center">
-          <div className="basis-1/8">
-            <img className="h-10" src={logo}></img>
+          <div className="flex flex-row justify-start item-center basis-1/6 items-center">
+            <div className="basis-1/8 h-full p-2">
+              <img className="h-10" src={logo}></img>
+            </div>
+            <div className="px-2 font-bold basis-1/8">Sharky/APT</div>
           </div>
-          <div className="px-2 font-bold basis-1/8">Sharky/APT</div>
         </div>
-        <div className="flex flex-col justify-center item-center basis-1/6 text-left">
-          <div className="flex">
-            <div className="w-4">{symbols[color]}</div>
-            <div>
-              <div
-                className={`font-bold text-xl basis-1/8 text-${colors[color]}-500`}
-              >
-                {assetLtp?.value}
+        <div className="flex flex-col justify-between items-center">
+          <div className="flex flex-col justify-center item-center basis-1/6 text-left">
+            <div className="flex">
+              <div className="w-4">{symbols[color]}</div>
+              <div>
+                <div
+                  className={`font-bold  basis-1/8 text-xs md:text-base text-${colors[color]}-500`}
+                >
+                  {assetLtp?.value}
+                </div>
+                <div className="basis-1/8 text-xs md:text-base">
+                  Asset Price
+                </div>
               </div>
-              <div className="basis-1/8">Asset Price</div>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center item-center basis-1/6 text-left">
+            <div className="flex">
+              <div className="w-4">{symbols[color]}</div>
+              <div>
+                <div
+                  className={`font-bold  basis-1/8 text-xs md:text-base text-${colors[color]}-500`}
+                >
+                  {futuresLtp?.value}
+                </div>
+                <div className="basis-1/8 text-xs md:text-base">
+                  Futures Price
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-center item-center basis-1/6 text-left">
-          <div className="flex">
-            <div className="w-4">{symbols[color]}</div>
-            <div>
-              <div
-                className={`font-bold text-xl basis-1/8 text-${colors[color]}-500`}
-              >
-                {futuresLtp?.value.toFixed(4)}
-              </div>
-              <div className="basis-1/8">Futures Price</div>
-            </div>
-          </div>
+        <div className="flex flex-col justify-between items-center">
+          <WalletSelector></WalletSelector>
+          <Dropdown></Dropdown>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
 export default CoinInformation;
+
+const Dropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("");
+
+  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+
+  const handleSelect = (option) => {
+    setSelectedOption(option);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative inline-block text-left md:min-w-[200px]">
+      <div>
+        <span className="rounded-md shadow-sm">
+          <button
+            type="button"
+            onClick={() => setIsOpen(!isOpen)}
+            className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            id="options-menu"
+            aria-haspopup="true"
+            aria-expanded="true"
+          >
+            {selectedOption || "Select an option"}
+            <svg
+              className="-mr-1 ml-2 h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                fillRule="evenodd"
+                d="M10 12a1 1 0 0 1-.707-.293l-4-4a1 1 0 0 1 1.414-1.414L10 9.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-4 4A1 1 0 0 1 10 12z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+        </span>
+      </div>
+
+      {isOpen && (
+        <div
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+          role="menu"
+          aria-orientation="vertical"
+          aria-labelledby="options-menu"
+        >
+          <div className="py-1" role="none">
+            {options.map((option) => (
+              <button
+                key={option}
+                onClick={() => handleSelect(option)}
+                className="block px-4 py-2 text-sm text-gray-700 w-full text-left hover:bg-gray-100 focus:bg-gray-100"
+                role="menuitem"
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

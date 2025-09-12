@@ -39,14 +39,14 @@ let Navbar: React.FC = () => {
             >
               Portfolio
             </Link>
-            <Link
+            {/* <Link
               to="/dashboard/markets"
               className={`nav-link ${
                 currLocation == "/dashboard/markets" ? "active" : ""
               }`}
             >
               Markets
-            </Link>
+            </Link> */}
           </div>
           <div className="h-8 border-l-2 border-[#383C3F]"></div>
         </div>
@@ -83,7 +83,7 @@ let Navbar: React.FC = () => {
                 <PiVaultBold size={25} />
                 <p className="text-[0.5rem]">Portfolio</p>
               </Link>
-              <Link
+              {/* <Link
                 to="/dashboard/markets"
                 className={`nav-link flex flex-col gap-1 justify-center items-center ${
                   currLocation == "/dashboard/markets" ? "active" : ""
@@ -91,7 +91,7 @@ let Navbar: React.FC = () => {
               >
                 <FaRegChartBar size={25} />
                 <p className="text-[0.5rem]">Markets</p>
-              </Link>
+              </Link> */}
             </div>
             <div className="h-8 border-l-2 border-[#383C3F]"></div>
           </div>

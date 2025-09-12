@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
         <div className="flex-1 h-full overflow-y-auto">
           {currLocation == "/dashboard/trade" && <Trade></Trade>}
           {currLocation == "/dashboard/portfolio" && <Portfolio></Portfolio>}
-          {currLocation == "/dashboard/markets" && <Markets></Markets>}
+          {/* {currLocation == "/dashboard/markets" && <Markets></Markets>} */}
         </div>
       </div>
     </>

@@ -5,31 +5,7 @@ import Order from "./Portfolioroute/Order";
 import History from "./Portfolioroute/History";
 
 const Portfolio = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedRoute, setSelectedRoute] = useState(1); // New state variable
-
-  const toggle = () => setIsOpen(!isOpen);
-  const showAnimation = {
-    hidden: {
-      width: 0,
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-    show: {
-      opacity: 1,
-      width: "auto",
-      transition: {
-        duration: 0.5,
-      },
-    },
-  };
-
-  const handleRouteClick = (name) => {
-    setSelectedRoute(name);
-    console.log(name);
-  };
+  const [nav, setNav] = useState(1);
 
   return (
     <>

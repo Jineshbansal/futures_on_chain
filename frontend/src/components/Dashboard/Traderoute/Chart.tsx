@@ -64,7 +64,7 @@ const fetchData = async () => {
     const data = await response.json();
     lastSequenceNumber = (parseInt(data[data.length - 1].sequence_number) + 1).toString();
     const newData = data.map((item: any) => ({
-      value: parseFloat(item.data.ltp) * ( 1 + (rfactor * (expiryTime - (Math.floor(Number(item.data.timestamp) / 1000000)))/(24*3600))),
+      value: Math.floor(parseFloat(item.data.ltp) * ( 1 + (rfactor * (expiryTime - (Math.floor(Number(item.data.timestamp) / 1000000)))/(24*3600)))),
       time: Math.floor(Number(item.data.timestamp) / 1000000),
     }));
    areaSeries.setData(newData);
@@ -81,7 +81,7 @@ setInterval(() => {
       console.log("trying")
       lastSequenceNumber = (parseInt(data[data.length - 1].sequence_number) + 1).toString();
       const newData: Data = {
-        value: parseFloat(data[data.length - 1].data.ltp) * ( 1 + (rfactor * (expiryTime - Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000))/(24*3600))),
+        value: Math.floor(parseFloat(data[data.length - 1].data.ltp) * ( 1 + (rfactor * (expiryTime - Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000))/(24*3600)))),
         time: Math.floor(Number(data[data.length - 1].data.timestamp) / 1000000),
       };
       console.log(newData,lastSequenceNumber,"data updating chart")

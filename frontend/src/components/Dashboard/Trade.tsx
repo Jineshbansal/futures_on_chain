@@ -97,8 +97,8 @@ const Trade = () => {
       };
       const futuresData: Data = {
         value:
-          assetData.value *
-          (1 + (rfactor * (expiryTime - assetData.time)) / (24 * 3600)),
+          Math.floor(assetData.value *
+          (1 + (rfactor * (expiryTime - assetData.time)) / (24 * 3600))),
         time: Math.floor(
           Number(data[data.length - 1].data.timestamp) / 1000000
         ),
@@ -262,6 +262,7 @@ const Trade = () => {
                 tradeWindow={tradeWindow}
                 setTradeWindow={setTradeWindow}
                 futuresLtp={futuresLtp}
+                ltp={ltp}
               ></OrderWindow>
             </div>
           </div>
@@ -427,6 +428,7 @@ const Trade = () => {
             tradeWindow={tradeWindow}
             setTradeWindow={setTradeWindow}
             futuresLtp={futuresLtp}
+            ltp={ltp}
           ></OrderWindow>
         )}
       </div>

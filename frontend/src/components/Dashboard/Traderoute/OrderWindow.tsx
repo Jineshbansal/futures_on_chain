@@ -9,10 +9,20 @@ interface Data {
   time: number;
 }
 
+interface Order {
+  lvg: string;
+  qty: string;
+  stock_price: string;
+  user_address: string;
+  pos?: boolean;
+  timestamp: string;
+}
+
 interface OrderWindowProps {
   tradeWindow: boolean;
   setTradeWindow: React.Dispatch<React.SetStateAction<boolean>>;
   futuresLtp: Data;
+  ltp: Order;
 }
 
 // function to execute order
@@ -27,15 +37,16 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   tradeWindow,
   setTradeWindow: _setTradeWindow,
   futuresLtp,
+  ltp,
 }) => {
   const [limit, setLimit] = useState(true);
   const [openStopLoss, setOpenStopLoss] = useState(false);
   const [side, setSide] = useState("Buy");
 
-  const [limitPrice, setLimitPrice] = useState(0.0);
-  const [price, setPrice] = useState(0.0);
-  const [size, setSize] = useState(0.0);
-  const [stopLoss, setStopLoss] = useState(0.0);
+  const [limitPrice, setLimitPrice] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [size, setSize] = useState(0);
+  const [stopLoss, setStopLoss] = useState(0);
 
   const [leverage, setLeverage] = useState(1);
 
@@ -47,7 +58,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     const inputValue = e.target.value;
 
     // Allow only positive numbers
-    const isValid = /^\d*\.?\d*$/.test(inputValue);
+    const isValid = /^$|^\d+$/.test(inputValue);
 
     if (isValid) {
       setLimitPrice(inputValue);
@@ -56,11 +67,10 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     }
   };
   const handleStopLoss = (e) => {
-    e.preventDefault();
     const inputValue = e.target.value;
 
-    // Allow only positive numbers
-    const isValid = /^\d*\.?\d*$/.test(inputValue);
+    // Allow only positive integers
+    const isValid = /^$|^\d+$/.test(inputValue);
 
     if (isValid) {
       setStopLoss(inputValue);
@@ -71,37 +81,37 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     e.preventDefault();
     const inputValue = e.target.value;
     // Allow only positive numbers
-    const isValid = /^\d*\.?\d*$/.test(inputValue);
+    const isValid = /^$|^\d+$/.test(inputValue);
 
     if (isValid) {
       setSize(inputValue);
       if (limit) {
         setPrice(limitPrice * inputValue);
+      } else {
+        //Market ltd from reccent trades set price to ltd*size
+        setPrice(inputValue * ltp?.stock_price);
       }
-    } else {
-      //Market ltd from reccent trades set price to ltd*size
     }
-    e.prevent.prev;
   };
 
   const handlePrice = (e) => {
-    e.preventDefault();
     const inputValue = e.target.value;
 
     // Allow only positive numbers
-    const isValid = /^\d*\.?\d*$/.test(inputValue);
+    const isValid = /^$|^\d+$/.test(inputValue);
 
     if (isValid) {
       setPrice(inputValue);
       if (limit) {
-        let calcSize = (inputValue / limitPrice).toFixed(4);
+        let calcSize = (inputValue / limitPrice).toFixed(0);
         if (inputValue == 0) {
-          setSize(0.0);
+          setSize(0);
         } else {
           setSize(calcSize);
         }
       } else {
         //Market ltd from recent trades set size to price/recenttrades
+        setSize((inputValue / ltp?.stock_price).toFixed(0));
       }
     }
   };
@@ -127,13 +137,28 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
   const { account } = useWallet();
 
   const executeOrder = async (leverage, size, price, ind, stoploss) => {
-    if(!stoploss) {
-      if(ind==0 || ind ==2) stoploss = 0;
+    if (
+      (price > 1.05 * futuresLtp.value || price < 0.95 * futuresLtp.value) &&
+      limit
+    ) {
+      window.confirm("Limit Price Should be in 5% range!!!");
+
+      setLimitPrice(0);
+      setStopLoss(0);
+      setPrice(0);
+      setSize(0);
+      setLeverage(1);
+
+      return;
+    }
+
+    if (!stoploss) {
+      if (ind == 0 || ind == 2) stoploss = 0;
       else stoploss = Number.MAX_SAFE_INTEGER;
-    } else if(ind == 0 || ind == 2) {
-      if(stoploss>price) stoploss=0
-    }  else if(ind == 1 || ind == 3) {
-      if(stoploss<price) stoploss = Number.MAX_SAFE_INTEGER;
+    } else if (ind == 0 || ind == 2) {
+      if (stoploss > price) stoploss = 0;
+    } else if (ind == 1 || ind == 3) {
+      if (stoploss < price) stoploss = Number.MAX_SAFE_INTEGER;
     }
 
     size = parseFloat(size);
@@ -144,7 +169,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
     if (!account) return [];
     const moduleAddress = import.meta.env.VITE_APP_MODULE_ADDRESS;
 
-    console.log(leverage, parseFloat(size), price, stoploss, 'args');
+    console.log(leverage, parseFloat(size), price, stoploss, "args");
     const payload = {
       type: "entry_function_payload",
       function: `${moduleAddress}::Orderbook::${param[ind]}`,
@@ -158,8 +183,18 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
       // // wait for transaction
       console.log(payload);
       await provider.waitForTransaction(response.hash);
+      setLimitPrice(0);
+      setStopLoss(0);
+      setPrice(0);
+      setSize(0);
+      setLeverage(1);
     } catch (error: any) {
       console.log(error);
+      setLimitPrice(0);
+      setStopLoss(0);
+      setPrice(0);
+      setSize(0);
+      setLeverage(1);
     }
   };
 
@@ -274,12 +309,44 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                       </div>
                       <input
                         className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                        placeholder="0.00"
+                        placeholder="0"
                         type="text"
                         value={limitPrice ? limitPrice : ""}
                         onChange={handleLimitPrice}
                       ></input>
                     </div>
+                  </div>
+                  <div className="flex justify-center items-center gap-2">
+                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
+                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                          Size
+                        </div>
+                        <input
+                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                          placeholder="0"
+                          type="text"
+                          value={size ? size : ""}
+                          onChange={handleSize}
+                        ></input>
+                      </div>
+                    </div>
+                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
+                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                          Price
+                        </div>
+                        <input
+                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                          placeholder="0"
+                          type="text"
+                          value={price ? price : ""}
+                          onChange={handlePrice}
+                        ></input>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                     {openStopLoss && (
                       <div className="relative flex flex-col justify-center items-start w-full h-full rounded-xl">
                         <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
@@ -288,7 +355,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         <button
                           className="absolute top-0 right-0"
                           onClick={() => {
-                            setStopLoss(0.0);
+                            setStopLoss(0);
                             setOpenStopLoss(false);
                           }}
                         >
@@ -296,7 +363,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         </button>
                         <input
                           className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                          placeholder="0.00"
+                          placeholder="0"
                           type="text"
                           value={stopLoss ? stopLoss : ""}
                           onChange={handleStopLoss}
@@ -313,36 +380,6 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         Add Stoploss
                       </button>
                     )}
-                  </div>
-                  <div className="flex justify-center items-center gap-2">
-                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
-                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
-                          Size
-                        </div>
-                        <input
-                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                          placeholder="0.00"
-                          type="text"
-                          value={size ? size : ""}
-                          onChange={handleSize}
-                        ></input>
-                      </div>
-                    </div>
-                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
-                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
-                          Price
-                        </div>
-                        <input
-                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                          placeholder="0.00"
-                          type="text"
-                          value={price ? price : ""}
-                          onChange={handlePrice}
-                        ></input>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-[60%]">
@@ -367,25 +404,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-0 flex flex-col justify-center items-center gap-3 w-[80%]">
-                <div className="w-[70%] text-xs">
-                  <div className="flex justify-between items-center">
-                    <div>Expected Price</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Marigin</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Fee</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Total</div>
-                    <div>-</div>
-                  </div>
-                </div>
+              <div className="absolute bottom-0 flex flex-col justify-center items-center w-[80%]">
                 <div
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={
@@ -452,12 +471,30 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                       </div>
                       <input
                         className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                        placeholder="0.00"
+                        placeholder="0"
                         type="text"
                         value={size ? size : ""}
                         onChange={handleSize}
                       ></input>
                     </div>
+                    <div className="flex flex-col justify-center items-center w-full gap-7">
+                      <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
+                        <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
+                          <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
+                            Price
+                          </div>
+                          <input
+                            className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
+                            placeholder="0"
+                            type="text"
+                            value={price ? price : ""}
+                            onChange={handlePrice}
+                          ></input>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
                     {openStopLoss && (
                       <div className="relative flex flex-col justify-center items-start w-full h-full rounded-xl">
                         <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
@@ -466,7 +503,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         <button
                           className="absolute top-0 right-0"
                           onClick={() => {
-                            setStopLoss(0.0);
+                            setStopLoss(0);
                             setOpenStopLoss(false);
                           }}
                         >
@@ -474,7 +511,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         </button>
                         <input
                           className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                          placeholder="0.00"
+                          placeholder="0"
                           type="text"
                           value={stopLoss ? stopLoss : ""}
                           onChange={handleStopLoss}
@@ -491,22 +528,6 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                         Add Stoploss
                       </button>
                     )}
-                  </div>
-                  <div className="flex flex-col justify-center items-center w-full gap-7">
-                    <div className="flex justify-center items-start w-full gap-2 h-8 rounded-xl">
-                      <div className="flex flex-col justify-center items-start w-full h-full rounded-xl">
-                        <div className="w-full h-full bg-[#FFFFFF] bg-opacity-[8%]  px-2 pt-1 rounded-t-xl text-[#eaf0f6] text-opacity-[60%]">
-                          Price
-                        </div>
-                        <input
-                          className="w-full h-full px-2 pb-1 appearance-none focus:outline-none bg-[#FFFFFF] bg-opacity-[8%] rounded-b-xl"
-                          placeholder="0.00"
-                          type="text"
-                          value={price ? price : ""}
-                          onChange={handlePrice}
-                        ></input>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-[60%]">
@@ -532,24 +553,6 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                 </div>
               </div>
               <div className="absolute bottom-0 flex flex-col justify-center items-center gap-3 w-[80%]">
-                <div className="w-[70%] text-xs">
-                  <div className="flex justify-between items-center">
-                    <div>Expected Price</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Marigin</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Fee</div>
-                    <div>-</div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>Total</div>
-                    <div>-</div>
-                  </div>
-                </div>
                 <div
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={
