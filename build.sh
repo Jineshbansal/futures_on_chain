@@ -4,7 +4,6 @@
 # Installing python dependencies:
 pip3 install typer
 pip3 install PyInquirer
-pip3 install PyInquirer
 pip3 install rich
 pip3 install cli-box
 pip3 install aptos-sdk
