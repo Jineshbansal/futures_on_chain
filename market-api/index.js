@@ -3,10 +3,9 @@ const http = require("http");
 const socketIO = require("socket.io");
 const { Network, Provider } = require("aptos");
 const provider = new Provider(Network.DEVNET);
-const dotenv = require("dotenv")
+const dotenv = require("dotenv");
 dotenv.config();
-moduleAddress =
-  process.env.MODULE_ADDR;
+moduleAddress = process.env.MODULE_ADDR;
 
 const app = express();
 const server = http.createServer(app);
@@ -26,7 +25,7 @@ const fetchData = async () => {
     );
     response["data"]["ltp"] =
       response["data"]["buyers"].slice(-1)[0]["stock_price"];
-    //console.log(response);
+    console.log(response);
     return response;
   } catch (error) {
     console.error("Error fetching data:", error.message);
