@@ -18,7 +18,7 @@ const Navelement: React.FC<NavProp> = ({ nav, setNav: _setNav }) => {
               _setNav(1);
             }}
           >
-            Position
+            Orders
           </li>
           <li
             className={`w-[80%] px-4 py-1 rounded-md md:rounded-l-md hover:bg-[#061323] ${
@@ -28,9 +28,9 @@ const Navelement: React.FC<NavProp> = ({ nav, setNav: _setNav }) => {
               _setNav(2);
             }}
           >
-            Order
+            Positions
           </li>
-          <li
+          {/* <li
             className={`w-[80%] px-4 py-1 rounded-md md:rounded-l-md hover:bg-[#061323] ${
               nav === 3 ? "bg-[#FFFFFF] bg-opacity-[7%] shadow-slate-500" : ""
             }`}
@@ -39,44 +39,11 @@ const Navelement: React.FC<NavProp> = ({ nav, setNav: _setNav }) => {
             }}
           >
             History
-          </li>
+          </li> */}
         </ul>
       </div>
 
-      <div className="md:hidden flex absolute bottom-0 justify-center items-start py-2 gradient w-full px-2">
-        <ul className="flex md:flex-col justify-center items-end gap-3 text-[#EAF0F6] font-montserrat w-full">
-          <li
-            className={`w-[80%] px-4 py-1 rounded-md md:rounded-l-md hover:bg-[#061323] ${
-              nav === 1 ? "bg-[#FFFFFF] bg-opacity-[7%] shadow-slate-500" : ""
-            }`}
-            onClick={() => {
-              _setNav(1);
-            }}
-          >
-            Position
-          </li>
-          <li
-            className={`w-[80%] px-4 py-1 rounded-md md:rounded-l-md hover:bg-[#061323] ${
-              nav === 2 ? "bg-[#FFFFFF] bg-opacity-[7%] shadow-slate-500" : ""
-            }`}
-            onClick={() => {
-              _setNav(2);
-            }}
-          >
-            Order
-          </li>
-          <li
-            className={`w-[80%] px-4 py-1 rounded-md md:rounded-l-md hover:bg-[#061323] ${
-              nav === 3 ? "bg-[#FFFFFF] bg-opacity-[7%] shadow-slate-500" : ""
-            }`}
-            onClick={() => {
-              _setNav(3);
-            }}
-          >
-            History
-          </li>
-        </ul>
-      </div>
+     
     </>
   );
 };
