@@ -199,26 +199,32 @@ const Positions = ({
                   <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-left flex flex-row">
                     {item.pos ? (
                       <div className="flex">
-                        <div className="text-2xl">{symbols[1]}</div>
-                        <p className="text-green-500">
+                        <div className="text-2xl">
+                          {
+                          ((futuresLtp.value - parseFloat(item.stock_price)) * parseFloat(item.qty)) > 0 ? symbols[1] : symbols[0]
+                          }
+                          </div>
+                        <p className={`${((futuresLtp.value - parseFloat(item.stock_price)) * parseFloat(item.qty)) > 0 ? "text-green-500" : "text-red-500"}`}>
                           {(
                             (futuresLtp.value - parseFloat(item.stock_price)) *
-                            parseFloat(item.qty) *
-                            parseFloat(item.lvg)
-                          ).toFixed(2)}
+                            parseFloat(item.qty)
+                          )}
                         </p>
                       </div>
                     ) : (
                       <div className="flex">
-                        <div className="text-2xl">{symbols[0]}</div>
-                        <p className="text-red-500">
-                          {(
-                            (-parseFloat(item.stock_price) + futuresLtp.value) *
-                            parseFloat(item.qty) *
-                            parseFloat(item.lvg)
-                          ).toFixed(2)}
-                        </p>
-                      </div>
+                      <div className="text-2xl">
+                        {
+                        (( -futuresLtp.value + parseFloat(item.stock_price)) * parseFloat(item.qty)) > 0 ? symbols[1] : symbols[0]
+                        }
+                        </div>
+                      <p className={`${(( - futuresLtp.value + parseFloat(item.stock_price)) * parseFloat(item.qty)) > 0 ? "text-green-500" : "text-red-500"}`}>
+                        {(
+                          (- futuresLtp.value + parseFloat(item.stock_price)) *
+                          parseFloat(item.qty)
+                        )}
+                      </p>
+                    </div>
                     )}
                   </td>
                   <td className="lg:py-3 lg:px-6 md:px-2 md:py- text-center">

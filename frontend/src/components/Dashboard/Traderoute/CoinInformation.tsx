@@ -44,7 +44,7 @@ const CoinInformation = ({
             <div className="basis-1/8 h-full lg:p-2">
               <img className="h-full" src={logo}></img>
             </div>
-            <div className="px-2 font-bold basis-1/8">Sharky/APT</div>
+            <div className="px-2 font-bold basis-1/8">X/APT</div>
           </div>
           <div className="flex flex-col justify-center item-center basis-1/6 text-left">
             <div className="flex">
@@ -82,7 +82,7 @@ const CoinInformation = ({
             <div className="basis-1/8 h-full p-2">
               <img className="h-10" src={logo}></img>
             </div>
-            <div className="px-2 font-bold basis-1/8">Sharky/APT</div>
+            <div className="px-2 font-bold basis-1/8">X/APT</div>
           </div>
         </div>
         <div className="flex flex-col justify-between items-center">
@@ -130,9 +130,9 @@ export default CoinInformation;
 
 const Dropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("X/Apt 24H");
 
-  const options = ["Option 1", "Option 2", "Option 3", "Option 4"];
+  const options = ["X/Apt 24H", "X/Apt 48H", "X/Apt 72H"];
 
   const handleSelect = (option) => {
     setSelectedOption(option);
