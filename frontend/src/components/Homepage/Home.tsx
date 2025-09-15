@@ -9,7 +9,7 @@ const Home: React.FC = () => {
     <>
       <SectionOne></SectionOne>
       <SectionTwo></SectionTwo>
-      <SectionThree></SectionThree>
+      {/* <SectionThree></SectionThree> */}
       <SectionFour></SectionFour>
     </>
   );

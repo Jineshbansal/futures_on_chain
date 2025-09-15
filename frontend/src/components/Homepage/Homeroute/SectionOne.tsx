@@ -38,12 +38,12 @@ let SectionOne: React.FC = () => {
               </div>
             </button>
           </Link>
-            <button className="bg-[#FFFFFF] px-4 py-3 rounded-full bg-opacity-[4%] drop-shadow-lg shadow-inner">
+            {/* <button className="bg-[#FFFFFF] px-4 py-3 rounded-full bg-opacity-[4%] drop-shadow-lg shadow-inner">
               <div className="flex justify-center items-center gap-1">
                 <img src={gift} className="h-6"></img>
                 <p>Connect Wallet</p>
               </div>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

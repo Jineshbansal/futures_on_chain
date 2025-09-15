@@ -1,5 +1,5 @@
 import React from "react";
-import image from "./../../../assets/div.magical-borders-inner.svg";
+import image from "./../../../assets/homepage-img.svg";
 import star from "./../../../assets/artifacts/Group 3.svg";
 
 let SectionTwo: React.FC = () => {

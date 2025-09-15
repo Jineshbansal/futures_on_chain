@@ -50,7 +50,7 @@ body {
   min-width: 100%;
   height: 100%; /* Adjust height as needed */
   background-image: url("./assets/Background.svg");
-  background-size: auto; /* Or contain, depending on how you want the SVG to scale */
+  background-size: cover; /* Or contain, depending on how you want the SVG to scale */
   background-repeat: no-repeat;
   /* Other background properties like position, etc. can be adjusted here */
   background-position: 5%;

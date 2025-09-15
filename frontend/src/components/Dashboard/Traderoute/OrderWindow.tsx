@@ -404,8 +404,8 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-0 flex flex-col justify-center items-center w-[80%]">
-                <div
+              <div className="absolute bottom-0 pb-8 flex flex-col justify-center items-center w-[80%]">
+                <button
                   className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
                   onClick={
                     side === "Buy"
@@ -418,7 +418,7 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   }
                 >
                   Place Order
-                </div>
+                </button>
               </div>
             </form>
           ) : (
@@ -552,21 +552,21 @@ const OrderWindow: React.FC<OrderWindowProps> = ({
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-0 flex flex-col justify-center items-center gap-3 w-[80%]">
-                <div
-                  className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
-                  onClick={
-                    side === "Buy"
-                      ? () => {
-                          executeOrder(leverage, size, price, 2, stopLoss);
-                        }
-                      : () => {
-                          executeOrder(leverage, size, price, 3, stopLoss);
-                        }
-                  }
-                >
-                  Place Order
-                </div>
+              <div className="absolute bottom-0 pb-8 flex flex-col justify-center items-center gap-3 w-[80%]">
+                  <button
+                    className="flex justify-center items-center h-12 w-[80%] mb-3 bg-[#1068CE] rounded-lg hover:bg-white hover:border hover:text-[#1068CE] border-[#1068CE]"
+                    onClick={
+                      side === "Buy"
+                        ? () => {
+                            executeOrder(leverage, size, price, 2, stopLoss);
+                          }
+                        : () => {
+                            executeOrder(leverage, size, price, 3, stopLoss);
+                          }
+                    }
+                  >
+                    Place Order
+                  </button>
               </div>
             </form>
           )}

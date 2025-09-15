@@ -16,9 +16,9 @@ let Navbar: React.FC = () => {
       <div className="md:flex justify-between items-center h-16 bg-[#0B1B2D] px-10 hidden">
         <div className="flex items-center justify-center">
           <div className="flex gap-3 justify-center items-center pr-3">
-            <a>
+            <Link to="/">
               <img className="h-10" src={logo}></img>
-            </a>
+            </Link>
             <div className="h-8 border-l-2 border-[#383C3F]"></div>
           </div>
 
