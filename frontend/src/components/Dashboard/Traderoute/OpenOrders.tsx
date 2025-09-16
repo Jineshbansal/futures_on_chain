@@ -57,7 +57,7 @@ const OpenOrders = ({
 }: {
   currAsk: Order[];
   currBid: Order[];
-}) => {
+}) => { 
   const { account } = useWallet();
   if (!account)
     return (
