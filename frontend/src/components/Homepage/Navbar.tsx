@@ -28,20 +28,20 @@ let Navbar: React.FC = () => {
           >
             Home
           </Link>
-          <Link
+          {/* <Link
             to="/about"
             className={`nav-link ${currLocation == "/about" ? "active" : ""}`}
           >
             About
-          </Link>
+          </Link> */}
           <Link
-            to="/docs"
+            to="https://github.com/ankur12-1610/delydelx/blob/main/README.md"
             className={`nav-link ${currLocation == "/docs" ? "active" : ""}`}
           >
             Docs
           </Link>
           <Link
-            to="/apis"
+            to="https://github.com/ankur12-1610/delydelx/blob/main/transaction-api/README.md"
             className={`nav-link ${currLocation == "/apis" ? "active" : ""}`}
           >
             APIs
@@ -107,7 +107,7 @@ let Navbar: React.FC = () => {
             >
               Home
             </Link>
-            <Link
+            {/* <Link
               to="/about"
               className={`nav-link ${currLocation == "/about" ? "active" : ""}`}
               onClick={() => {
@@ -115,9 +115,9 @@ let Navbar: React.FC = () => {
               }}
             >
               About
-            </Link>
+            </Link> */}
             <Link
-              to="/docs"
+              to="https://github.com/ankur12-1610/delydelx/blob/main/README.md"
               className={`nav-link ${currLocation == "/docs" ? "active" : ""}`}
               onClick={() => {
                 setNav(false);
@@ -126,7 +126,7 @@ let Navbar: React.FC = () => {
               Docs
             </Link>
             <Link
-              to="/apis"
+              to="https://github.com/ankur12-1610/delydelx/blob/main/transaction-api/README.md"
               className={`nav-link ${currLocation == "/apis" ? "active" : ""}`}
               onClick={() => {
                 setNav(false);

@@ -25,7 +25,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #0B1B2D;
+  background-color: #0b1b2d;
   color: #fff;
   padding: 10px 20px;
 }
@@ -56,7 +56,7 @@ body {
   background-position: 5%;
 }
 .gradient {
-  background-image: linear-gradient(180deg, #0B1B2D, #0D1224)
+  background-image: linear-gradient(180deg, #0b1b2d, #0d1224);
 }
 .nav-link {
   color: rgba(234, 240, 246, 0.3);
@@ -85,18 +85,21 @@ body {
 /* Custom scrollbar styles */
 /* WebKit */
 ::-webkit-scrollbar {
+  background-color: #061323;
   width: 2px; /* Adjust the width of the scrollbar as needed */
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #061323; /* Color of the scrollbar thumb */
   border-radius: 3px; /* Round the scrollbar thumb */
+  transition: all 0.3s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  width: 10px; /* Adjust the width of the scrollbar on hover */
+  background-color: #555; /* Change to a different color on hover if desired */
+  /* Increase size on hover */
+  width: 40px;
 }
-
 /* Mozilla Firefox */
 /* Note: Firefox does not support styling the scrollbar directly. These styles apply to a container with scrollbar-styled content */
 /* Add the class `scrollbar-thin` to the container */
@@ -112,7 +115,7 @@ main {
   padding: 10px;
 }
 
-.title { 
+.title {
   font-size: 3rem;
   display: grid;
   place-items: center;

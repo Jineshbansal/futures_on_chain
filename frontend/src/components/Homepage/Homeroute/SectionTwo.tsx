@@ -5,7 +5,7 @@ import star from "./../../../assets/artifacts/Group 3.svg";
 let SectionTwo: React.FC = () => {
   return (
     <>
-      <div className="md:flex justify-center items-center pt-7 hidden">
+      <div className="md:flex justify-center items-center py-20 hidden">
         <div className="relative">
           <img src={image} className="w-[1240px]"></img>
           <div className="absolute flex justify-center items-center bottom-0 left-0 w-full">
