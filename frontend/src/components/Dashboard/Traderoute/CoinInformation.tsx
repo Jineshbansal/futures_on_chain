@@ -19,6 +19,7 @@ const CoinInformation = ({
 }) => {
   const [prev, setPrev] = useState(0);
   const [color, setColor] = useState(0);
+  const [option, setOption] = useState("X/Apt 24H");
   const colors = ["white", "red", "green"];
 
   const symbols = [
@@ -44,7 +45,7 @@ const CoinInformation = ({
             <div className="basis-1/8 h-full lg:p-2">
               <img className="h-full" src={logo}></img>
             </div>
-            <div className="px-2 font-bold basis-1/8">X/APT</div>
+            <div className="px-2 font-bold basis-1/8">{option}</div>
           </div>
           <div className="flex flex-col justify-center item-center basis-1/6 text-left">
             <div className="flex">
@@ -73,7 +74,7 @@ const CoinInformation = ({
             </div>
           </div>
         </div>
-        <Dropdown></Dropdown>
+        <Dropdown option={option} setOption={setOption}></Dropdown>
       </div>
 
       <div className="flex md:hidden justify-between item-center w-full h-full p-4">
@@ -119,7 +120,7 @@ const CoinInformation = ({
         </div>
         <div className="flex flex-col justify-between items-center">
           <WalletSelector></WalletSelector>
-          <Dropdown></Dropdown>
+          <Dropdown option={option} setOption={setOption}></Dropdown>
         </div>
       </div>
     </>
@@ -128,7 +129,19 @@ const CoinInformation = ({
 
 export default CoinInformation;
 
-const Dropdown = () => {
+
+interface OrderWindowProps {
+  option : string;
+  setOption: React.Dispatch<React.SetStateAction<string>>;
+
+}
+
+
+
+const Dropdown :React.FC<OrderWindowProps> = ({
+  option,
+  setOption:_setOption
+})=> {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("X/Apt 24H");
 
@@ -136,6 +149,7 @@ const Dropdown = () => {
 
   const handleSelect = (option) => {
     setSelectedOption(option);
+    _setOption(option)
     setIsOpen(false);
   };
 
@@ -146,7 +160,7 @@ const Dropdown = () => {
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex justify-center w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+            className="inline-flex justify-center w-full rounded-md bg-white bg-opacity-[8%] px-4 py-2 text-sm font-medium text-grey-300 hover:text-gray-700 hover:bg-gray-50 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
             id="options-menu"
             aria-haspopup="true"
             aria-expanded="true"
