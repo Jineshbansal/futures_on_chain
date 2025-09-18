@@ -42,8 +42,8 @@ const CoinInformation = ({
       <div className="md:flex hidden flex-row px-8 justify-between items-center h-full w-full border-[0.5px] border-[#383C3F]">
         <div className="flex gap-12 justify-start item-center w-full h-full">
           <div className="flex flex-row justify-start item-center basis-1/6 items-center">
-            <div className="basis-1/8 h-full lg:p-2">
-              <img className="h-full" src={logo}></img>
+            <div className="flex justify-center items-center basis-1/8 h-full lg:p-2">
+              <img className="h-[70%]" src={logo}></img>
             </div>
             <div className="px-2 font-bold basis-1/8">{option}</div>
           </div>
