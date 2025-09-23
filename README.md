@@ -1,4 +1,5 @@
 <img src="https://github.com/ankur12-1610/delydelx/blob/main/frontend/src/assets/Icon.svg"></img> 
+
 # Futures on Chain
 
 Futures on Chain is a decentralized futures trading platform built on top of the Aptos Blockchain. It has both a DEX (Decentralized Exchange) for the underlying commodity and a Futures Trading Platform built into it. The repository consists of a Frontend Website to interact with the contract using the browser wallet, two APIs for real time market data and order placing.
