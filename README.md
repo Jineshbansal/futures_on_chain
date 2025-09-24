@@ -79,5 +79,5 @@ Further details about CLI can be found [here](transaction-api/README.md)
 
 ## Implementation Details
 
-![App Architecture](images/app_arch.png)
+![App Architecture](images/src/assets/app_arch.png)
 
