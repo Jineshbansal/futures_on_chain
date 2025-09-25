@@ -1,4 +1,4 @@
-<img src="https://github.com/ankur12-1610/delydelx/blob/main/frontend/src/assets/Icon.svg"></img> 
+<img src="https://github.com/ankur12-1610/delydelx/blob/main/images/futures0xc.svg"></img> 
 
 # Futures on Chain
 
@@ -79,5 +79,5 @@ Further details about CLI can be found [here](transaction-api/README.md)
 
 ## Implementation Details
 
-![App Architecture](images/src/assets/app_arch.png)
+![App Architecture](frontend/src/assets/app_arch.png)
 
