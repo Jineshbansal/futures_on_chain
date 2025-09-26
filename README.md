@@ -51,6 +51,14 @@ These instructions will help you get a copy of the project up and running on you
   4. Populate env 
      1. If you have deployed your own smart contract then populate the corresponding env variable with your own addresses.
      2. If you want to use our deployed smart contracts the use the env file as is.
+     ```
+      VITE_APP_NETWORK=devnet // it can devnet or mainnet
+      // module address for multiple future contracts
+      VITE_APP_MODULE_ADDRESS_24H=
+      VITE_APP_MODULE_ADDRESS_48H=
+      VITE_APP_MODULE_ADDRESS_72H=
+     ```
+
 
 - #### Smart Contract
     Do this only if you want to make your own smart contracts.
