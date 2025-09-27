@@ -1398,13 +1398,6 @@ module Team18::Orderbook {
     }
 
 
-    public entry fun get_free_coins(account: &signer,amount : u64) acquires DexOrderBook {
-
-        let orderBook = borrow_global_mut<DexOrderBook>(@Team18);
-        coin::register<Xcoin>(account);
-        let deposit_coin = coin::mint<Xcoin>(amount, &orderBook.mint_cap);
-        coin::deposit(signer::address_of(account), deposit_coin);
-    }
 
     public entry fun placeAskForCoin(account: &signer, price: u64, qty: u64) acquires DexOrderBook ,SignerCapability,Resource{
         coin::register<Xcoin>(account);
