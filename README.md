@@ -27,8 +27,8 @@ These instructions will help you get a copy of the project up and running on you
     - React.js
     - yarn/npm (**yarn recommend**)
   - #### Smart Contract
-    - aptos-cli (package)
-    - aptos-sdk (python)
+    - [aptos-cli](https://aptos.dev/tools/aptos-cli/) (package)
+    - [aptos-sdk](https://aptos.dev/sdks/python-sdk) (python)
 ### Installation
 - #### Frontend
   1. Clone the repository:
