@@ -92,6 +92,8 @@ Further details about CLI can be found [here](transaction-api/README.md)
 
 ## Presentation Link
 
+Click [here](https://drive.google.com/file/d/19EcxHgoRgxPj2fVTqyghJm2dEKWvlDyh/view?usp=sharing) to view the full presentation!
+
 ## Demo Video Link
 
 To learn more about Aptos, click [here](https://aptos.dev/).
