@@ -90,3 +90,8 @@ Further details about CLI can be found [here](transaction-api/README.md)
 
 ![App Architecture](frontend/src/assets/app_arch.png)
 
+## Presentation Link
+
+## Demo Video Link
+
+To learn more about Aptos, click [here](https://aptos.dev/).
