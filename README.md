@@ -1,6 +1,6 @@
-<img src="https://github.com/ankur12-1610/delydelx/blob/main/images/futures0xc.svg"></img> 
+<img src="./images/futures0xc.svg"></img> 
 
-# [Futures on Chain](https://github.com/ankur12-1610/delydelx/tree/main)
+# [Futures on Chain](https://github.com/t-Team-18/futures0xC)
 
 
 Futures on Chain is a decentralized futures trading platform built on top of the Aptos Blockchain. It has both a DEX (Decentralized Exchange) for the underlying commodity and a Futures Trading Platform built into it. The repository consists of a Frontend Website to interact with the contract using the browser wallet, two APIs for real time market data and order placing.
@@ -14,6 +14,8 @@ Futures on Chain is a decentralized futures trading platform built on top of the
     - [Installation](#installation)
   - [Usage](#usage)
   - [Implementation Details](#implementation-details)
+  - [Presentation Link](#presentation-link)
+  - [Demo Video Link](#demo-video-link)
 
 ## Getting Started
 
@@ -33,45 +35,45 @@ These instructions will help you get a copy of the project up and running on you
 - #### Frontend
   1. Clone the repository:
 
-      ```
+      
       git clone https://github.com/me/your-repositry
-      ```
+      
 
   2. Change to the project directory:
 
-      ```
+      
       cd your-repository/frontend
-      ```
+      
 
   3. Install the dependencies:
 
-      ```
+      
       yarn install
-      ```
+      
   4. Populate env 
      1. If you have deployed your own smart contract then populate the corresponding env variable with your own addresses.
      2. If you want to use our deployed smart contracts the use the env file as is.
-     ```
+     
       VITE_APP_NETWORK=devnet // it can devnet or mainnet
       // module address for multiple future contracts
       VITE_APP_MODULE_ADDRESS_24H=
       VITE_APP_MODULE_ADDRESS_48H=
       VITE_APP_MODULE_ADDRESS_72H=
-     ```
+     
 
 
 - #### Smart Contract
     Do this only if you want to make your own smart contracts.
     1. Change to the project directory:
    
-        ```
+        
         cd your-repository/move
-        ```
+        
     2. Run this command
 
-        ```
+        
         aptos move create-resource-account-and-publish-package --profile [your-own-profile] --address-name Team18 --seed [any-random-number] --named-addresses source_addr=[your-own-source-address]
-        ```  
+          
 
 
 ## Usage
@@ -81,19 +83,20 @@ These instructions will help you get a copy of the project up and running on you
 - You can also use the public API provided (or host your own) for market data and use the CLI for making transactions with the exchange  
     1. ##### Market Data API
         Provides real-time market data, including the current price, trading volume, and order book depth for all available futures contracts.
-Further details about CLI can be found [here](market-api/README.md)
+Further details about CLI can be found [here](https://github.com/t-Team-18/futures0xC/tree/main/market-api/README.md)
     1. ##### Transaction CLI
         Facilitates all financial transactions related to the buying and selling of futures contracts, as well as margin calls and settlements through a CLI.
-Further details about CLI can be found [here](transaction-api/README.md)
+Further details about CLI can be found [here](https://github.com/t-Team-18/futures0xC/tree/main/transaction-api/README.md)
 
 ## Implementation Details
 
-![App Architecture](frontend/src/assets/app_arch.png)
+![App Architecture](./images/app_arch.png)
 
 ## Presentation Link
 
 Click [here](https://drive.google.com/file/d/19EcxHgoRgxPj2fVTqyghJm2dEKWvlDyh/view?usp=sharing) to view the full presentation!
 
 ## Demo Video Link
+Click [here](https://drive.google.com/file/d/1S7TsyNjqOf85gCzZZN_qazOKyxxFSftp/view?usp=sharing) to see a working demo!
 
-To learn more about Aptos, click [here](https://aptos.dev/).
+To learn more about A, click [here](https://aptos.dev/).
