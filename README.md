@@ -97,6 +97,6 @@ Further details about CLI can be found [here](https://github.com/t-Team-18/futur
 Click [here](https://drive.google.com/file/d/10pU5AsIz-1WK0iny5jmIE-fBjisXcZqO/view?usp=drive_link) to view the full presentation!
 
 ## Demo Video Link
-Click [here](https://drive.google.com/file/d/1S7TsyNjqOf85gCzZZN_qazOKyxxFSftp/view?usp=sharing) to see a working demo!
+Click [here](https://drive.google.com/file/d/10pU5AsIz-1WK0iny5jmIE-fBjisXcZqO/view?usp=drive_link) to see a working demo!
 
 To learn more about A, click [here](https://aptos.dev/).
