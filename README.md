@@ -78,7 +78,7 @@ These instructions will help you get a copy of the project up and running on you
 
 ## Usage
 
-- You can place orders and get real time market data using the frontend GUI (**Graphical User Interface**) or the one deployed [Link]().
+- You can place orders and get real time market data using the frontend GUI (**Graphical User Interface**) or the one deployed [Link](https://028759426b4133e311a665806dc439fe6d276bd886fbb14b.vercel.app/).
 
 - You can also use the public API provided (or host your own) for market data and use the CLI for making transactions with the exchange  
     1. ##### Market Data API
