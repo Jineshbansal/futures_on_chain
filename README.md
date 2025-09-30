@@ -61,21 +61,6 @@ These instructions will help you get a copy of the project up and running on you
       VITE_APP_MODULE_ADDRESS_72H=
      
 
-
-- #### Smart Contract
-    Do this only if you want to make your own smart contracts.
-    1. Change to the project directory:
-   
-        
-        cd your-repository/move
-        
-    2. Run this command
-
-        
-        aptos move create-resource-account-and-publish-package --profile [your-own-profile] --address-name Team18 --seed [any-random-number] --named-addresses source_addr=[your-own-source-address]
-          
-
-
 ## Usage
 
 - You can place orders and get real time market data using the frontend GUI (**Graphical User Interface**) or the one deployed [Link](https://028759426b4133e311a665806dc439fe6d276bd886fbb14b.vercel.app/).
