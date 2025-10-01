@@ -3,39 +3,46 @@ compiled_package_info:
   package_name: token-vesting_2
   address_alias_instantiation:
     Extensions: "0000000000000000000000000000000000000000000000000000000000000001"
-    Team18: b7a5b4a0f26ff715ece64de80e88b6a45f1a2b08dbbfec590f7e8a6ce8c677e0
+    OrderbookOwner: 1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264
     aptos_framework: "0000000000000000000000000000000000000000000000000000000000000001"
+    aptos_fungible_asset: 000000000000000000000000000000000000000000000000000000000000000a
     aptos_std: "0000000000000000000000000000000000000000000000000000000000000001"
     aptos_token: "0000000000000000000000000000000000000000000000000000000000000003"
     core_resources: 000000000000000000000000000000000000000000000000000000000a550c18
-    source_addr: cd1eebe9cb95b6a646f9aa56a4552fbd48003aee698a328bd0725483a523ad7f
+    source_addr: 1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264
     std: "0000000000000000000000000000000000000000000000000000000000000001"
+    vm: "0000000000000000000000000000000000000000000000000000000000000000"
     vm_reserved: "0000000000000000000000000000000000000000000000000000000000000000"
-  source_digest: 7BB45B2832EFDE6BF332157D4C85C366B2BF81CE32A6A553809FFFBDC109D197
+  source_digest: B068CC450B853CAA9D79674D339DD0014F7E2449E81885FB04708BA4CFDB46FD
   build_flags:
     dev_mode: false
     test_mode: false
+    override_std: ~
     generate_docs: false
     generate_abis: false
     generate_move_model: true
-    full_model_generation: false
+    full_model_generation: true
     install_dir: ~
     force_recompilation: false
-    additional_named_addresses:
-      Team18: b7a5b4a0f26ff715ece64de80e88b6a45f1a2b08dbbfec590f7e8a6ce8c677e0
-      source_addr: cd1eebe9cb95b6a646f9aa56a4552fbd48003aee698a328bd0725483a523ad7f
-    architecture: ~
+    additional_named_addresses: {}
     fetch_deps_only: false
-    skip_fetch_latest_git_deps: false
+    skip_fetch_latest_git_deps: true
     compiler_config:
-      bytecode_version: ~
+      bytecode_version: 7
       known_attributes:
         - bytecode_instruction
         - deprecated
         - event
         - expected_failure
+        - "fmt::skip"
         - legacy_entry_fun
+        - "lint::allow_unsafe_randomness"
+        - "lint::skip"
+        - module_lock
+        - "mutation::skip"
         - native_interface
+        - persistent
+        - randomness
         - resource_group
         - resource_group_member
         - test
@@ -43,8 +50,12 @@ compiled_package_info:
         - verify_only
         - view
       skip_attribute_checks: false
-      compiler_version: ~
+      compiler_version: V2_0
+      language_version: "2.1"
+      experiments:
+        - optimize=on
 dependencies:
   - AptosFramework
   - AptosStdlib
   - MoveStdlib
+bytecode_deps: []
