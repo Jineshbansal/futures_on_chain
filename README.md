@@ -73,6 +73,12 @@ Further details about CLI can be found [here](https://github.com/t-Team-18/futur
         Facilitates all financial transactions related to the buying and selling of futures contracts, as well as margin calls and settlements through a CLI.
 Further details about CLI can be found [here](https://github.com/t-Team-18/futures0xC/tree/main/transaction-api/README.md)
 
+## Glimpse of Contracts
+Smart Contract Address: 0xe15eb2a61d29dcd658e3d4b4cbd8f6c2d19f9442b8ede6c0cd75373d474682a0
+![Contract Image 1](./images/contract_1.png)
+![Contract Image 2](./images/contract_2.png)
+![Contract Image 3](./images/contract_3.png)
+
 ## Implementation Details
 
 ![App Architecture](./images/app_arch.png)
