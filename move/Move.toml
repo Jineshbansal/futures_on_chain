@@ -1,12 +1,10 @@
 [package]
-name = "token-vesting_2"
+name = "Orderbook"
 version = "1.0.0"
 authors = []
 
 [addresses]
-OrderbookOwner = "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264"
-source_addr = "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264"
-
+AptosOrderbook = "0x1daa32d80efdfed99a137ec5bb2ee62a59fd6aa922d186fb5d00ae58281ae264"
 
 [dev-addresses]
 
