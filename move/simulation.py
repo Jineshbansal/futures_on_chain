@@ -47,14 +47,14 @@ async def check_balance():
 async def buyMA(lvg, qty, price, stop_loss):
     await call_aptos_function(alice, "Orderbook", "buyAtlimitorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
 
-async def buyMB(lvg, qty, price, stop_loss):
-    await call_aptos_function(bob, "Orderbook", "buyAtlimitorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
+async def buyMB(lvg, qty, stop_loss):
+    await call_aptos_function(bob, "Orderbook", "buyAtMarketorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
 
 async def sellMA(lvg, qty, stop_loss):
     await call_aptos_function(alice, "Orderbook", "sellAtMarketorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
 
-async def sellMB(lvg, qty, stop_loss):
-    await call_aptos_function(bob, "Orderbook", "sellAtMarketorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
+async def sellMB(lvg, qty, price, stop_loss):
+    await call_aptos_function(bob, "Orderbook", "sellAtlimitorder", [], [TransactionArgument(lvg, Serializer.u64),TransactionArgument(qty, Serializer.u64), TransactionArgument(price, Serializer.u64), TransactionArgument(stop_loss, Serializer.u64)])
 
 async def transfer():
     print("\n=== Transferring the token to Bob ===")
@@ -62,7 +62,7 @@ async def transfer():
     txn_hash = await rest_client.transfer(alice, bob.address(), 1)  
     await rest_client.wait_for_transaction(txn_hash)   
 async def main(): 
-    await fund()
+    # await fund()
     # await check_balance()
     for i in range(1, 10):
         print(f"Iteration {i}")
@@ -72,13 +72,13 @@ async def main():
         qty = random.randint(1, 10)
         stop_loss = price - 10 if price > 10 else price
         print(f"bid: {bid}, lvg: {lvg}, price: {price}, qty: {qty}, stop_loss: {stop_loss}")
-        if bid == 1:
-            await buyMA(lvg, qty, price, stop_loss)
+        if bid == 0:
+            await buyMA(lvg, qty,price, stop_loss)
+        elif bid == 1:
+            await buyMB(lvg, qty, stop_loss)
         elif bid == 2:
-            await buyMB(lvg, qty, price, stop_loss)
-        elif bid == 3:
             await sellMA(lvg, qty, stop_loss)
         else:
-            await sellMB(lvg, qty, stop_loss)
+            await sellMB(lvg, qty,price, stop_loss)
         
 asyncio.run(main())
