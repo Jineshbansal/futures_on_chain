@@ -64,7 +64,7 @@ async def transfer():
 async def main(): 
     # await fund()
     # await check_balance()
-    for i in range(1, 10):
+    for i in range(1, 100):
         print(f"Iteration {i}")
         bid = random.randint(0, 3)
         lvg = random.randint(1, 10)
