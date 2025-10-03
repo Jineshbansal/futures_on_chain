@@ -85,9 +85,9 @@ Smart Contract Address: 0xe15eb2a61d29dcd658e3d4b4cbd8f6c2d19f9442b8ede6c0cd7537
 
 ## Presentation Link
 
-Click [here](https://drive.google.com/file/d/10pU5AsIz-1WK0iny5jmIE-fBjisXcZqO/view?usp=drive_link) to view the full presentation!
+Click [here](https://drive.google.com/file/d/19EcxHgoRgxPj2fVTqyghJm2dEKWvlDyh/view?usp=sharing) to view the full presentation!
 
 ## Demo Video Link
-Click [here](https://drive.google.com/file/d/10pU5AsIz-1WK0iny5jmIE-fBjisXcZqO/view?usp=drive_link) to see a working demo!
+Click [here](https://drive.google.com/file/d/1S7TsyNjqOf85gCzZZN_qazOKyxxFSftp/view?usp=sharing) to see a working demo!
 
-To learn more about A, click [here](https://aptos.dev/).
+To learn more about Aptos, click [here](https://aptos.dev/).
