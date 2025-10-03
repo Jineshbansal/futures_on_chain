@@ -68,10 +68,10 @@ These instructions will help you get a copy of the project up and running on you
 - You can also use the public API provided (or host your own) for market data and use the CLI for making transactions with the exchange  
     1. ##### Market Data API
         Provides real-time market data, including the current price, trading volume, and order book depth for all available futures contracts.
-Further details about CLI can be found [here](https://github.com/t-Team-18/futures0xC/tree/main/market-api/README.md)
+Further details about CLI can be found [here](https://github.com/Jineshbansal/futures_on_chain/blob/main/market-api/README.md)
     1. ##### Transaction CLI
         Facilitates all financial transactions related to the buying and selling of futures contracts, as well as margin calls and settlements through a CLI.
-Further details about CLI can be found [here](https://github.com/t-Team-18/futures0xC/tree/main/transaction-api/README.md)
+Further details about CLI can be found [here](https://github.com/Jineshbansal/futures_on_chain/blob/main/transaction-api/README.md)
 
 ## Glimpse of Contracts
 Smart Contract Address: 0xe15eb2a61d29dcd658e3d4b4cbd8f6c2d19f9442b8ede6c0cd75373d474682a0
